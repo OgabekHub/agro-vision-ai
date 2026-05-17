@@ -1,3 +1,13 @@
+---
+title: AgroVision AI
+emoji: 🌱
+colorFrom: green
+colorTo: emerald
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # 🌱 AgroVision AI
 
 **AI-Powered Smart Agriculture Platform for Uzbekistan**
