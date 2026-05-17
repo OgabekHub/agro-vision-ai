@@ -35,7 +35,7 @@ def _build_request(prompt: str, image_bytes: bytes) -> dict:
         "contents": [{
             "parts": [
                 {"text": prompt},
-                {"inline_data": {"mime_type": "image/jpeg", "data": b64}},
+                {"inlineData": {"mimeType": "image/jpeg", "data": b64}},
             ]
         }],
         "generationConfig": {
