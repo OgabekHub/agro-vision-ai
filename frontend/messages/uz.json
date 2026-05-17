@@ -1,0 +1,244 @@
+{
+  "nav": {
+    "home": "Bosh sahifa",
+    "dashboard": "Panel",
+    "diseaseAnalysis": "Kasallik",
+    "landAnalysis": "Yer tahlili",
+    "regions": "Viloyatlar",
+    "admin": "Admin",
+    "startAnalysis": "Boshlash"
+  },
+  "landing": {
+    "badge": "Asosida",
+    "badgeModel": "YOLOv8 & EfficientNet",
+    "headline1": "Sun'iy intellekt",
+    "headline2": "Qishloq xo'jaligi",
+    "headline3": "O'zbekiston uchun",
+    "subtitle": "Zamonaviy kompyuter ko'rishi va chuqur o'rganish modellari yordamida o'simliklarni aniqlang, kasalliklarni tasdiqlang va aqlli ekin tavsiyalarini oling.",
+    "ctaPrimary": "AI tahlilni boshlash",
+    "ctaSecondary": "Viloyatlarni ko'rish",
+    "stats": {
+      "regions": "O'zbekiston viloyatlari",
+      "plants": "O'simlik turlari",
+      "diseases": "Kasallik turlari",
+      "accuracy": "AI aniqligi"
+    },
+    "features": {
+      "title": "To'liq AI Qishloq Xo'jaligi",
+      "titleHighlight": "Vositalari",
+      "subtitle": "O'zbekistonning xilma-xil qishloq xo'jaligi landshafti uchun maxsus ishlab chiqilgan oltita kuchli AI vositalar.",
+      "plantDetection": {
+        "title": "O'simlikni aniqlash",
+        "desc": "Istalgan o'simlik rasmini yuklang va YOLOv8-asosli AI 95%+ aniqlik bilan turni bir zumda aniqLaydi."
+      },
+      "diseaseAnalysis": {
+        "title": "Kasallik tahlili",
+        "desc": "EfficientNet neyron tarmog'i barg rasmlaridan o'simlik kasalliklarini aniqlab, og'irlik baholash va davolash rejasini beradi."
+      },
+      "landAnalysis": {
+        "title": "Yer tahlili",
+        "desc": "Kompyuter ko'rishi rasmlardan tuproq sharoitlarini tahlil qilib, optimal ekinlar va sug'orish strategiyalarini tavsiya qiladi."
+      },
+      "regionIntelligence": {
+        "title": "Viloyat ma'lumotlari",
+        "desc": "O'zbekistonning barcha 14 viloyatining iqlim ma'lumotlari, ekin moslik va real vaqt ob-havo ma'lumotlari bilan interaktiv xarita."
+      },
+      "smartRecommendations": {
+        "title": "Aqlli tavsiyalar",
+        "desc": "Tuproq tahlili, mintaqaviy iqlim, ob-havo naqshlari va bozor ma'lumotlariga asoslangan AI ekin tavsiyalari."
+      },
+      "adminDashboard": {
+        "title": "Admin paneli",
+        "desc": "AI ishlashini kuzatish, tahlil jurnallarini boshqarish, foydalanuvchi faoliyatini kuzatish va platformani nazorat qilish."
+      },
+      "learnMore": "Ko'proq o'qish"
+    },
+    "howItWorks": {
+      "tag": "Texnologiya",
+      "title": "AI qanday",
+      "titleHighlight": "ishlaydi",
+      "steps": {
+        "upload": { "step": "01", "title": "Rasm yuklash", "desc": "Istalgan o'simlik, barg yoki yer rasmini sudrab tashlang yoki tanlang." },
+        "processing": { "step": "02", "title": "AI qayta ishlash", "desc": "YOLOv8 va EfficientNet modellari OpenCV oldini olish bilan rasmingizni bir necha soniyada tahlil qiladi." },
+        "results": { "step": "03", "title": "Natijalarni olish", "desc": "Ishonchlilik ballari, tavsiyalar va amaliy tushunchalar bilan batafsil tahlil oling." }
+      }
+    },
+    "cta": {
+      "title": "Qishloq xo'jaligingizni",
+      "titleHighlight": "o'zgartirishga tayyormisiz?",
+      "subtitle": "Bugun AI yordamida ekinlaringizni tahlil qilishni boshlang. Birinchi rasmingizni yuklang va qishloq xo'jaligida kompyuter ko'rishining kuchini his qiling.",
+      "btnLaunch": "Panelni ochish",
+      "btnDisease": "Kasallikni aniqlashni sinab ko'ring"
+    }
+  },
+  "dashboard": {
+    "title": "AI Boshqaruv paneli",
+    "subtitle": "AI tahlilini boshlash uchun rasm yuklang",
+    "plantDetection": {
+      "title": "O'simlikni aniqlash",
+      "dropLabel": "O'simlik rasmini shu yerga tashlang",
+      "dropSublabel": "AI o'simlik turini, ishonchlilik darajasini va mos o'sish mintaqalarini aniqLaydi",
+      "btnAnalyze": "AI bilan tahlil qilish"
+    },
+    "systemStatus": {
+      "title": "Tizim holati",
+      "online": "Faol",
+      "active": "Ishlamoqda"
+    },
+    "recentAnalyses": "So'nggi tahlillar",
+    "analysisTypes": {
+      "plant": "O'simlik",
+      "disease": "Kasallik",
+      "land": "Yer"
+    }
+  },
+  "disease": {
+    "title": "Kasallik tahlili",
+    "subtitle": "Kasalliklarni aniqlash uchun barg yoki meva rasmini yuklang",
+    "dropLabel": "Barg yoki meva rasmini shu yerga tashlang",
+    "dropSublabel": "EfficientNet AI kasalliklar, og'irlik va davolash variantlarini tahlil qiladi",
+    "btnDetect": "Kasalliklarni aniqlash",
+    "recentDetections": "So'nggi aniqlanganlar",
+    "tips": {
+      "title": "Yaxshi natijalar uchun maslahatlar",
+      "tip1": "Zararlangan barglarning yaqin suratlarini oling",
+      "tip2": "Yaxshi yoritishni ta'minlang — tabiiy kun yorug'i eng yaxshisi",
+      "tip3": "Sog'lom va zararlangan joylarni ham qamrab oling",
+      "tip4": "Xiralashgan yoki soyali rasmlardan saqlaning"
+    },
+    "severity": {
+      "low": "Past xavf",
+      "medium": "O'rtacha xavf",
+      "high": "Yuqori xavf",
+      "critical": "Kritik"
+    },
+    "sections": {
+      "causes": "Sabablar",
+      "treatments": "Davolash tavsiyalari",
+      "prevention": "Oldini olish maslahatlari"
+    },
+    "affects": "Ta'sir qiladi"
+  },
+  "land": {
+    "title": "Yer tahlili",
+    "subtitle": "Ekin tavsiyalari uchun yer/tuproq rasmini yuklang",
+    "dropLabel": "Yer yoki tuproq rasmini shu yerga tashlang",
+    "dropSublabel": "AI tuproq sharoitlarini tahlil qilib, optimal ekinlarni tavsiya qiladi",
+    "btnAnalyze": "Yerni tahlil qilish",
+    "soilAnalysis": "Tuproq tahlili",
+    "recommendedCrops": "Tavsiya etilgan ekinlar",
+    "irrigationAdvice": "Sug'orish maslahati",
+    "farmingSuggestions": "Dehqonchilik tavsiyalari",
+    "labels": {
+      "soilType": "Tuproq turi",
+      "phLevel": "pH darajasi",
+      "moisture": "Namlik",
+      "organicMatter": "Organik modda",
+      "growingPeriod": "O'sish davri",
+      "expectedYield": "Kutilgan hosil"
+    }
+  },
+  "regions": {
+    "title": "O'zbekiston viloyatlari",
+    "subtitle": "Barcha 14 viloyat uchun qishloq xo'jaligi ma'lumotlarini o'rganing",
+    "selectRegion": "Viloyatni tanlang",
+    "selectHint": "Batafsil qishloq xo'jaligi ma'lumotlari, iqlim ma'lumotlari va ekin tavsiyalarini ko'rish uchun ro'yxatdan viloyat tanlang.",
+    "labels": {
+      "climate": "Iqlim",
+      "soilTypes": "Tuproq turlari",
+      "mainCrops": "Asosiy ekinlar",
+      "summer": "Yoz",
+      "winter": "Qish",
+      "rainfall": "Yog'ingarchilik",
+      "agriArea": "Q. x. maydoni",
+      "capital": "Poytaxt"
+    }
+  },
+  "admin": {
+    "title": "Admin paneli",
+    "subtitle": "AI jurnallari, rasmlar va foydalanuvchilarni boshqarish",
+    "tabs": {
+      "overview": "Ko'rinish",
+      "logs": "AI jurnallari",
+      "images": "Rasmlar",
+      "users": "Foydalanuvchilar"
+    },
+    "stats": {
+      "totalAnalyses": "Jami tahlillar",
+      "imagesUploaded": "Yuklangan rasmlar",
+      "activeUsers": "Faol foydalanuvchilar",
+      "aiAccuracy": "AI aniqligi"
+    },
+    "recentActivity": "So'nggi faoliyat",
+    "searchLogs": "Jurnallarni qidirish...",
+    "registeredUsers": "Ro'yxatdan o'tgan foydalanuvchilar",
+    "uploadedImages": "Yuklangan rasmlar",
+    "columns": {
+      "type": "Tur",
+      "result": "Natija",
+      "confidence": "Ishonchlilik",
+      "model": "Model",
+      "time": "Vaqt",
+      "speed": "Tezlik",
+      "actions": "Amallar",
+      "name": "Ism",
+      "email": "Elektron pochta",
+      "role": "Rol",
+      "analyses": "Tahlillar",
+      "joined": "Qo'shilgan"
+    },
+    "thisWeek": "bu hafta"
+  },
+  "analysis": {
+    "processing": {
+      "uploading": "Rasm yuklanmoqda...",
+      "plantDetection": "YOLOv8 o'simlik aniqlash ishlamoqda...",
+      "diseaseClassifier": "EfficientNet kasallik klassifikatori ishlamoqda...",
+      "soilAnalysis": "OpenCV bilan tuproq sharoitlari tahlil qilinmoqda...",
+      "steps": {
+        "uploading": "Rasm yuklash",
+        "aiAnalysis": "AI tahlili",
+        "generatingResults": "Natijalar yaratish"
+      }
+    },
+    "plant": {
+      "confidence": "Ishonchlilik",
+      "growingSeason": "O'sish mavsumi",
+      "waterNeeds": "Suv ehtiyoji",
+      "suitableRegions": "O'zbekistondagi mos mintaqalar",
+      "family": "Oila"
+    }
+  },
+  "common": {
+    "loading": "Yuklanmoqda...",
+    "error": "Xatolik yuz berdi",
+    "tryAgain": "Qayta urinish",
+    "back": "Orqaga",
+    "close": "Yopish",
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "operational": "Barcha AI tizimlari ishlamoqda",
+    "aiPlatform": "AI Platforma"
+  },
+  "footer": {
+    "description": "O'zbekiston uchun mo'ljallangan o'simliklarni aniqlash, kasalliklarni tahlil qilish va ekin tavsiyalari uchun kompyuter ko'rishidan foydalanadigan AI-asosli qishloq xo'jaligi platformasi.",
+    "platform": "Platforma",
+    "resources": "Resurslar",
+    "company": "Kompaniya",
+    "documentation": "Hujjatlar",
+    "apiReference": "API ma'lumotnoma",
+    "modelAccuracy": "Model aniqligi",
+    "dataSources": "Ma'lumot manbalari",
+    "about": "Biz haqimizda",
+    "contact": "Bog'lanish",
+    "privacy": "Maxfiylik siyosati",
+    "terms": "Foydalanish shartlari",
+    "copyright": "AgroVision AI. O'zbekiston qishloq xo'jaligi uchun yaratilgan.",
+    "links": {
+      "plantDetection": "O'simlikni aniqlash",
+      "diseaseAnalysis": "Kasallik tahlili",
+      "landAnalysis": "Yer tahlili",
+      "regionMap": "Viloyat xaritasi"
+    }
+  }
+}

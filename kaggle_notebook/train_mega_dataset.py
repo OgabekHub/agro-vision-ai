@@ -1,0 +1,185 @@
+"""
+AgroVision AI - Mega Dataset Training Script for Kaggle
+This script is designed to be run in a Kaggle Notebook.
+
+Steps to use:
+1. Create a New Notebook on Kaggle.
+2. Turn on the GPU (T4 x2 or P100) in the Notebook settings.
+3. Click 'Add Data' and search for a merged dataset, e.g., "Plant Disease Classification Merged Dataset".
+4. Copy and paste this code into a cell.
+5. Update the DATA_DIR variable to match the path of the dataset you added.
+6. Run the code. It will export `plant_disease_model.pth` and `class_names.json`.
+"""
+
+import os
+import json
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, random_split
+from torchvision import datasets, transforms, models
+from torch.cuda.amp import GradScaler, autocast
+import time
+import copy
+
+# ==========================================
+# CONFIGURATION
+# ==========================================
+# Update this path to where your Kaggle dataset is mounted!
+DATA_DIR = "/kaggle/input/plant-disease-classification-merged-dataset" 
+
+IMG_SIZE = 224
+BATCH_SIZE = 64
+EPOCHS = 15
+LEARNING_RATE = 0.001
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+print(f"Using device: {DEVICE}")
+
+# ==========================================
+# DATA PREPARATION & AUGMENTATION
+# ==========================================
+train_transforms = transforms.Compose([
+    transforms.Resize((256, 256)),
+    transforms.RandomCrop(IMG_SIZE),
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(20),
+    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+
+val_transforms = transforms.Compose([
+    transforms.Resize((IMG_SIZE, IMG_SIZE)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+
+# Load full dataset
+full_dataset = datasets.ImageFolder(DATA_DIR, transform=train_transforms)
+class_names = full_dataset.classes
+num_classes = len(class_names)
+print(f"Found {num_classes} classes and {len(full_dataset)} total images.")
+
+# Split into Train / Val (80% / 20%)
+train_size = int(0.8 * len(full_dataset))
+val_size = len(full_dataset) - train_size
+train_dataset, val_dataset = random_split(full_dataset, [train_size, val_size])
+
+# Note: In practice, validation dataset should use val_transforms. 
+# For simplicity in this script, we can re-assign the transform for the val subset if using a custom wrapper, 
+# but PyTorch subsets inherit the original transform.
+
+train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2, pin_memory=True)
+val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=2, pin_memory=True)
+
+# ==========================================
+# MODEL SETUP (EfficientNet-B2)
+# ==========================================
+model = models.efficientnet_b2(weights=models.EfficientNet_B2_Weights.IMAGENET1K_V1)
+
+# Freeze early layers to speed up training if needed (optional)
+# for param in model.parameters():
+#     param.requires_grad = False
+
+# Replace classifier for our number of classes
+model.classifier = nn.Sequential(
+    nn.Dropout(p=0.3, inplace=True),
+    nn.Linear(model.classifier[1].in_features, num_classes)
+)
+
+model = model.to(DEVICE)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.AdamW(model.parameters(), lr=LEARNING_RATE, weight_decay=1e-4)
+scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=2)
+scaler = GradScaler()
+
+# ==========================================
+# TRAINING LOOP
+# ==========================================
+best_acc = 0.0
+best_model_wts = copy.deepcopy(model.state_dict())
+
+print("Starting training...")
+for epoch in range(EPOCHS):
+    start_time = time.time()
+    
+    # --- Train Phase ---
+    model.train()
+    running_loss = 0.0
+    running_corrects = 0
+
+    for inputs, labels in train_loader:
+        inputs = inputs.to(DEVICE, non_blocking=True)
+        labels = labels.to(DEVICE, non_blocking=True)
+
+        optimizer.zero_grad()
+
+        with autocast():
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
+
+        scaler.scale(loss).backward()
+        scaler.step(optimizer)
+        scaler.update()
+
+        _, preds = torch.max(outputs, 1)
+        running_loss += loss.item() * inputs.size(0)
+        running_corrects += torch.sum(preds == labels.data)
+
+    train_loss = running_loss / train_size
+    train_acc = running_corrects.double() / train_size
+
+    # --- Val Phase ---
+    model.eval()
+    val_loss = 0.0
+    val_corrects = 0
+
+    with torch.no_grad():
+        for inputs, labels in val_loader:
+            inputs = inputs.to(DEVICE, non_blocking=True)
+            labels = labels.to(DEVICE, non_blocking=True)
+
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
+
+            _, preds = torch.max(outputs, 1)
+            val_loss += loss.item() * inputs.size(0)
+            val_corrects += torch.sum(preds == labels.data)
+
+    val_loss = val_loss / val_size
+    val_acc = val_corrects.double() / val_size
+
+    scheduler.step(val_acc)
+
+    if val_acc > best_acc:
+        best_acc = val_acc
+        best_model_wts = copy.deepcopy(model.state_dict())
+
+    time_elapsed = time.time() - start_time
+    print(f"Epoch {epoch+1}/{EPOCHS} [{time_elapsed:.0f}s] - "
+          f"Train Loss: {train_loss:.4f} Acc: {train_acc:.4f} | "
+          f"Val Loss: {val_loss:.4f} Acc: {val_acc:.4f}")
+
+print(f"\nTraining Complete. Best Val Accuracy: {best_acc:.4f}")
+
+# ==========================================
+# EXPORT MODEL & CLASSES
+# ==========================================
+# Load best weights
+model.load_state_dict(best_model_wts)
+
+# Save model weights
+torch.save(model.state_dict(), "plant_disease_model.pth")
+print("Saved model weights to plant_disease_model.pth")
+
+# Save class names JSON
+output_data = {
+    "num_classes": num_classes,
+    "classes": class_names
+}
+with open("class_names.json", "w") as f:
+    json.dump(output_data, f, indent=4)
+print("Saved class list to class_names.json")
+
+print("\nDONE! Now you can download `plant_disease_model.pth` and `class_names.json` and put them in your `models_weights` folder in the backend.")

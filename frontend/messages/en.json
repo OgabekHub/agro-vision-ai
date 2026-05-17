@@ -1,0 +1,244 @@
+{
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "diseaseAnalysis": "Disease Analysis",
+    "landAnalysis": "Land Analysis",
+    "regions": "Regions",
+    "admin": "Admin",
+    "startAnalysis": "Start Analysis"
+  },
+  "landing": {
+    "badge": "Powered by",
+    "badgeModel": "YOLOv8 & EfficientNet",
+    "headline1": "AI-Powered",
+    "headline2": "Agriculture",
+    "headline3": "for Uzbekistan",
+    "subtitle": "Detect plants, diagnose diseases, and get smart crop recommendations using state-of-the-art computer vision and deep learning models.",
+    "ctaPrimary": "Start AI Analysis",
+    "ctaSecondary": "Explore Regions",
+    "stats": {
+      "regions": "Uzbekistan Regions",
+      "plants": "Plant Species",
+      "diseases": "Disease Types",
+      "accuracy": "AI Accuracy"
+    },
+    "features": {
+      "title": "Complete AI Agriculture",
+      "titleHighlight": "Toolkit",
+      "subtitle": "Six powerful AI-driven tools designed specifically for Uzbekistan's diverse agricultural landscape.",
+      "plantDetection": {
+        "title": "Plant Detection",
+        "desc": "Upload any plant image and our YOLOv8-powered AI instantly identifies the species with 95%+ accuracy."
+      },
+      "diseaseAnalysis": {
+        "title": "Disease Analysis",
+        "desc": "EfficientNet neural network detects plant diseases from leaf images, providing severity assessment and treatment plans."
+      },
+      "landAnalysis": {
+        "title": "Land Analysis",
+        "desc": "Computer vision analyzes soil conditions from images, recommending optimal crops and irrigation strategies."
+      },
+      "regionIntelligence": {
+        "title": "Region Intelligence",
+        "desc": "Interactive map of all 14 Uzbekistan regions with climate data, crop suitability, and real-time weather."
+      },
+      "smartRecommendations": {
+        "title": "Smart Recommendations",
+        "desc": "AI-driven crop suggestions based on soil analysis, regional climate, weather patterns, and market data."
+      },
+      "adminDashboard": {
+        "title": "Admin Dashboard",
+        "desc": "Monitor AI performance, manage analysis logs, track user activity, and oversee the platform."
+      },
+      "learnMore": "Learn more"
+    },
+    "howItWorks": {
+      "tag": "Technology",
+      "title": "How Our",
+      "titleHighlight": "AI Works",
+      "steps": {
+        "upload": { "step": "01", "title": "Upload Image", "desc": "Drag & drop or browse to upload any plant, leaf, or land image." },
+        "processing": { "step": "02", "title": "AI Processing", "desc": "YOLOv8 and EfficientNet models analyze your image in seconds with OpenCV preprocessing." },
+        "results": { "step": "03", "title": "Get Results", "desc": "Receive detailed analysis with confidence scores, recommendations, and actionable insights." }
+      }
+    },
+    "cta": {
+      "title": "Ready to Transform Your",
+      "titleHighlight": "Agriculture",
+      "subtitle": "Start analyzing your crops with AI today. Upload your first image and experience the power of computer vision in agriculture.",
+      "btnLaunch": "Launch Dashboard",
+      "btnDisease": "Try Disease Detection"
+    }
+  },
+  "dashboard": {
+    "title": "AI Dashboard",
+    "subtitle": "Upload an image to start AI analysis",
+    "plantDetection": {
+      "title": "Plant Detection",
+      "dropLabel": "Drop a plant image here",
+      "dropSublabel": "AI will identify the plant species, confidence level, and suitable growing regions",
+      "btnAnalyze": "Analyze with AI"
+    },
+    "systemStatus": {
+      "title": "System Status",
+      "online": "Online",
+      "active": "Active"
+    },
+    "recentAnalyses": "Recent Analyses",
+    "analysisTypes": {
+      "plant": "Plant",
+      "disease": "Disease",
+      "land": "Land"
+    }
+  },
+  "disease": {
+    "title": "Disease Analysis",
+    "subtitle": "Upload a leaf or fruit image to detect diseases",
+    "dropLabel": "Drop a leaf or fruit image here",
+    "dropSublabel": "EfficientNet AI will analyze for diseases, severity, and treatment options",
+    "btnDetect": "Detect Diseases",
+    "recentDetections": "Recent Detections",
+    "tips": {
+      "title": "Tips for Better Results",
+      "tip1": "Take close-up photos of affected leaves",
+      "tip2": "Ensure good lighting — natural daylight is best",
+      "tip3": "Include both healthy and affected areas",
+      "tip4": "Avoid blurry or shadowed images"
+    },
+    "severity": {
+      "low": "Low Risk",
+      "medium": "Medium Risk",
+      "high": "High Risk",
+      "critical": "Critical"
+    },
+    "sections": {
+      "causes": "Causes",
+      "treatments": "Treatment Recommendations",
+      "prevention": "Prevention Tips"
+    },
+    "affects": "Affects"
+  },
+  "land": {
+    "title": "Land Analysis",
+    "subtitle": "Upload a land/soil image for crop recommendations",
+    "dropLabel": "Drop a land or soil image here",
+    "dropSublabel": "AI will analyze soil conditions and recommend optimal crops",
+    "btnAnalyze": "Analyze Land",
+    "soilAnalysis": "Soil Analysis",
+    "recommendedCrops": "Recommended Crops",
+    "irrigationAdvice": "Irrigation Advice",
+    "farmingSuggestions": "Farming Suggestions",
+    "labels": {
+      "soilType": "Soil Type",
+      "phLevel": "pH Level",
+      "moisture": "Moisture",
+      "organicMatter": "Organic Matter",
+      "growingPeriod": "Growing Period",
+      "expectedYield": "Expected Yield"
+    }
+  },
+  "regions": {
+    "title": "Uzbekistan Regions",
+    "subtitle": "Explore agricultural data for all 14 regions",
+    "selectRegion": "Select a Region",
+    "selectHint": "Choose a region from the list to view detailed agricultural data, climate information, and crop recommendations.",
+    "labels": {
+      "climate": "Climate",
+      "soilTypes": "Soil Types",
+      "mainCrops": "Main Crops",
+      "summer": "Summer",
+      "winter": "Winter",
+      "rainfall": "Rainfall",
+      "agriArea": "Agri. Area",
+      "capital": "Capital"
+    }
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "subtitle": "Manage AI logs, images, and users",
+    "tabs": {
+      "overview": "Overview",
+      "logs": "AI Logs",
+      "images": "Images",
+      "users": "Users"
+    },
+    "stats": {
+      "totalAnalyses": "Total Analyses",
+      "imagesUploaded": "Images Uploaded",
+      "activeUsers": "Active Users",
+      "aiAccuracy": "AI Accuracy"
+    },
+    "recentActivity": "Recent Activity",
+    "searchLogs": "Search logs...",
+    "registeredUsers": "Registered Users",
+    "uploadedImages": "Uploaded Images",
+    "columns": {
+      "type": "Type",
+      "result": "Result",
+      "confidence": "Confidence",
+      "model": "Model",
+      "time": "Time",
+      "speed": "Speed",
+      "actions": "Actions",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "analyses": "Analyses",
+      "joined": "Joined"
+    },
+    "thisWeek": "this week"
+  },
+  "analysis": {
+    "processing": {
+      "uploading": "Uploading image...",
+      "plantDetection": "Running YOLOv8 plant detection...",
+      "diseaseClassifier": "Running EfficientNet disease classifier...",
+      "soilAnalysis": "Analyzing soil conditions with OpenCV...",
+      "steps": {
+        "uploading": "Uploading Image",
+        "aiAnalysis": "AI Analysis",
+        "generatingResults": "Generating Results"
+      }
+    },
+    "plant": {
+      "confidence": "Confidence",
+      "growingSeason": "Growing Season",
+      "waterNeeds": "Water Needs",
+      "suitableRegions": "Suitable Regions in Uzbekistan",
+      "family": "Family"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "tryAgain": "Try again",
+    "back": "Back",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "operational": "All AI systems operational",
+    "aiPlatform": "AI Platform"
+  },
+  "footer": {
+    "description": "AI-powered smart agriculture platform using computer vision for plant detection, disease analysis, and crop recommendations tailored for Uzbekistan.",
+    "platform": "Platform",
+    "resources": "Resources",
+    "company": "Company",
+    "documentation": "Documentation",
+    "apiReference": "API Reference",
+    "modelAccuracy": "Model Accuracy",
+    "dataSources": "Data Sources",
+    "about": "About Us",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "copyright": "AgroVision AI. Built for Uzbekistan agriculture.",
+    "links": {
+      "plantDetection": "Plant Detection",
+      "diseaseAnalysis": "Disease Analysis",
+      "landAnalysis": "Land Analysis",
+      "regionMap": "Region Map"
+    }
+  }
+}
