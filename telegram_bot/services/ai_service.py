@@ -19,7 +19,7 @@ class AgroVisionAIService:
                 data = {"language": language}
                 resp = await client.post(f"{self.base_url}/api/v1/plant/detect", files=files, data=data)
                 resp.raise_for_status()
-                return resp.json()
+                return resp.json().get("data", {})
         except (httpx.HTTPError, httpx.TimeoutException) as e:
             # Backend ishlamasa mock qaytaradi
             return self._mock_plant_result()
@@ -32,7 +32,7 @@ class AgroVisionAIService:
                 data = {"language": language}
                 resp = await client.post(f"{self.base_url}/api/v1/disease/analyze", files=files, data=data)
                 resp.raise_for_status()
-                return resp.json()
+                return resp.json().get("data", {})
         except (httpx.HTTPError, httpx.TimeoutException) as e:
             return self._mock_disease_result()
 

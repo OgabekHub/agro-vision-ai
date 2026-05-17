@@ -9,7 +9,7 @@ from i18n.messages import get_msg
 from services.user_store import get_lang, set_lang
 from services.keyboards import main_keyboard, language_keyboard
 
-WEB_APP_URL = os.getenv("WEB_APP_URL", "http://localhost:3001")
+WEB_APP_URL = os.getenv("WEB_APP_URL", "https://agro-vision-ai-zeta.vercel.app/")
 
 
 async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

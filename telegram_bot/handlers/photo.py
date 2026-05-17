@@ -9,7 +9,7 @@ from i18n.messages import get_msg
 from services.user_store import get_lang, set_pending_photo
 from services.keyboards import analysis_keyboard
 
-WEB_APP_URL = os.getenv("WEB_APP_URL", "http://localhost:3001")
+WEB_APP_URL = os.getenv("WEB_APP_URL", "https://agro-vision-ai-zeta.vercel.app/")
 
 
 async def photo_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

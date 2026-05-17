@@ -95,7 +95,7 @@ async def _text_fallback(update, context) -> None:
     from telegram.constants import ParseMode
 
     lang = get_lang(update.effective_user.id)
-    web_url = os.getenv("WEB_APP_URL", "http://localhost:3001")
+    web_url = os.getenv("WEB_APP_URL", "https://agro-vision-ai-zeta.vercel.app/")
     await update.message.reply_text(
         get_msg(lang, "send_photo") + "\n\n" + get_msg(lang, "help"),
         parse_mode=ParseMode.MARKDOWN,

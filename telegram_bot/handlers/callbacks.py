@@ -17,7 +17,7 @@ from services.keyboards import main_keyboard, result_keyboard
 
 port = os.getenv("PORT", "7860")
 API_BASE_URL = os.getenv("API_BASE_URL", f"http://localhost:{port}")
-WEB_APP_URL = os.getenv("WEB_APP_URL", "http://localhost:3001")
+WEB_APP_URL = os.getenv("WEB_APP_URL", "https://agro-vision-ai-zeta.vercel.app/")
 
 ai_service = AgroVisionAIService(API_BASE_URL)
 
