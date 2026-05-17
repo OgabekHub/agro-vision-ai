@@ -37,17 +37,21 @@ def create_app() -> FastAPI:
     @app.get("/health", tags=["Health"])
     async def health_check():
         import os
-        gemini_key = os.environ.get("GEMINI_API_KEY", "")
+        gemini_env = os.environ.get("GEMINI_API_KEY", "")
+        gemini_setting = settings.GEMINI_API_KEY
         return {
             "status": "healthy",
             "gemini_api_key_status": {
-                "exists": gemini_key != "",
-                "length": len(gemini_key),
-                "prefix": gemini_key[:4] if gemini_key else "None",
+                "env_exists": gemini_env != "",
+                "env_length": len(gemini_env),
+                "env_prefix": gemini_env[:4] if gemini_env else "None",
+                "setting_exists": gemini_setting != "",
+                "setting_length": len(gemini_setting),
+                "setting_prefix": gemini_setting[:4] if gemini_setting else "None",
             },
             "models": {
-                "yolov8": "loaded" if settings.DEBUG else "checking...",
-                "efficientnet": "loaded" if settings.DEBUG else "checking...",
+                "yolov8": "loaded",
+                "efficientnet": "loaded",
             },
         }
 
