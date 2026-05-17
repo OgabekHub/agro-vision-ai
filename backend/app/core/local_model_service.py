@@ -21,6 +21,8 @@ logger = logging.getLogger(__name__)
 # Model yo'li
 BASE = Path(__file__).parent.parent.parent / "models_weights"
 MODEL_PATH = BASE / "plant_disease_model.pth"
+if not MODEL_PATH.exists():
+    MODEL_PATH = BASE / "mega_plant_disease_model.pth"
 CLASSES_PATH = BASE / "class_names.json"
 
 IMG_SIZE = 224
