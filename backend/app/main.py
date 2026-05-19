@@ -94,6 +94,24 @@ def create_app() -> FastAPI:
         except Exception as e:
             google_err = str(e)
             
+        proxy_org_ok = False
+        proxy_org_err = None
+        try:
+            import urllib.request
+            urllib.request.urlopen("https://api.telegram-proxy.org", timeout=5)
+            proxy_org_ok = True
+        except Exception as e:
+            proxy_org_err = str(e)
+            
+        proxy_uz_ok = False
+        proxy_uz_err = None
+        try:
+            import urllib.request
+            urllib.request.urlopen("https://api.telegram.org.uz", timeout=5)
+            proxy_uz_ok = True
+        except Exception as e:
+            proxy_uz_err = str(e)
+            
         return {
             "status": "healthy",
             "gemini_api_key_status": {
@@ -114,6 +132,10 @@ def create_app() -> FastAPI:
                 "api_error": telegram_api_err,
                 "google_accessible": google_ok,
                 "google_error": google_err,
+                "proxy_org_accessible": proxy_org_ok,
+                "proxy_org_error": proxy_org_err,
+                "proxy_uz_accessible": proxy_uz_ok,
+                "proxy_uz_error": proxy_uz_err,
                 "logs": bot_logs,
             },
             "models": {
