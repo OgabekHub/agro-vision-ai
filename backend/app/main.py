@@ -75,6 +75,16 @@ def create_app() -> FastAPI:
         except Exception as e:
             bot_logs = f"Error reading logs: {str(e)}"
             
+        # Check network access to Telegram API
+        telegram_api_ok = False
+        telegram_api_err = None
+        try:
+            import urllib.request
+            urllib.request.urlopen("https://api.telegram.org", timeout=5)
+            telegram_api_ok = True
+        except Exception as e:
+            telegram_api_err = str(e)
+            
         return {
             "status": "healthy",
             "gemini_api_key_status": {
@@ -91,6 +101,8 @@ def create_app() -> FastAPI:
                 "token_prefix": bot_token_env[:9] if bot_token_env else "None",
                 "process_running": bot_running,
                 "process_pids": bot_pid,
+                "api_accessible": telegram_api_ok,
+                "api_error": telegram_api_err,
                 "logs": bot_logs,
             },
             "models": {
