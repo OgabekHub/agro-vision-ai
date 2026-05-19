@@ -37,8 +37,44 @@ def create_app() -> FastAPI:
     @app.get("/health", tags=["Health"])
     async def health_check():
         import os
+        import subprocess
+        
         gemini_env = os.environ.get("GEMINI_API_KEY", "")
         gemini_setting = settings.GEMINI_API_KEY
+        
+        bot_token_env = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+        
+        # Check if bot.py process is running
+        bot_running = False
+        bot_pid = None
+        try:
+            # We can use pgrep to check for processes running bot.py
+            result = subprocess.run(["pgrep", "-f", "bot.py"], capture_output=True, text=True)
+            if result.returncode == 0 and result.stdout.strip():
+                bot_running = True
+                bot_pid = result.stdout.strip().replace("\n", ", ")
+        except Exception as e:
+            # Fallback to checking via ps if pgrep is not available
+            try:
+                result = subprocess.run(["ps", "aux"], capture_output=True, text=True)
+                if "bot.py" in result.stdout:
+                    bot_running = True
+            except Exception:
+                pass
+                
+        # Read bot logs
+        bot_logs = ""
+        try:
+            log_paths = ["/code/bot.log", "bot.log", "telegram_bot/bot.log"]
+            for path in log_paths:
+                if os.path.exists(path):
+                    with open(path, "r", encoding="utf-8", errors="ignore") as f:
+                        lines = f.readlines()
+                        bot_logs = "".join(lines[-50:])
+                    break
+        except Exception as e:
+            bot_logs = f"Error reading logs: {str(e)}"
+            
         return {
             "status": "healthy",
             "gemini_api_key_status": {
@@ -48,6 +84,14 @@ def create_app() -> FastAPI:
                 "setting_exists": gemini_setting != "",
                 "setting_length": len(gemini_setting),
                 "setting_prefix": gemini_setting[:4] if gemini_setting else "None",
+            },
+            "telegram_bot_status": {
+                "token_exists": bot_token_env != "",
+                "token_length": len(bot_token_env),
+                "token_prefix": bot_token_env[:9] if bot_token_env else "None",
+                "process_running": bot_running,
+                "process_pids": bot_pid,
+                "logs": bot_logs,
             },
             "models": {
                 "yolov8": "loaded",
