@@ -53,12 +53,29 @@ def main() -> None:
 
     logger.info("🌿 AgroVision AI Bot ishga tushmoqda...")
 
-    app = (
+    # Set up longer connection timeouts to prevent transient network handshake timeouts
+    from telegram.request import HTTPXRequest
+    request_config = HTTPXRequest(connect_timeout=20.0, read_timeout=20.0)
+
+    builder = (
         Application.builder()
         .token(token)
+        .request(request_config)
         .post_init(post_init)
-        .build()
     )
+
+    # Allow custom API URL if HuggingFace/Telegram blocks connections
+    api_url = os.getenv("TELEGRAM_API_URL")
+    if api_url:
+        logger.info(f"⚙️ Using custom TELEGRAM_API_URL: {api_url}")
+        builder = builder.base_url(api_url)
+        
+    api_file_url = os.getenv("TELEGRAM_API_FILE_URL")
+    if api_file_url:
+        logger.info(f"⚙️ Using custom TELEGRAM_API_FILE_URL: {api_file_url}")
+        builder = builder.base_file_url(api_file_url)
+
+    app = builder.build()
 
     # ── Handlerlarni ro'yxatga olish ──────────────────────────────────────
     app.add_handler(CommandHandler("start", start_handler))
