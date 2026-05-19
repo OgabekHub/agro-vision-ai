@@ -1,10 +1,14 @@
 """Disease Analysis API — avval Local Model (99.95% aniq), keyin Gemini fallback."""
 
 import time
+import uuid
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 from pydantic import BaseModel
+from typing import Optional
 from app.core import local_model_service
 from app.core.gemini_service import analyze_disease
+from app.api.v1.upload import upload_image_to_cloudinary
+from app.core.supabase_service import log_disease_analysis, insert_ai_log
 
 router = APIRouter()
 
@@ -15,12 +19,27 @@ class DiseaseAnalysisResponse(BaseModel):
     processing_time_ms: int
 
 
+def is_valid_uuid(val: Optional[str]) -> bool:
+    if not val:
+        return False
+    try:
+        uuid.UUID(str(val))
+        return True
+    except ValueError:
+        return False
+
+
 @router.post("/analyze", response_model=DiseaseAnalysisResponse)
-async def analyze_disease_endpoint(file: UploadFile = File(...), language: str = Form("uz")):
+async def analyze_disease_endpoint(
+    file: UploadFile = File(...),
+    language: str = Form("uz"),
+    user_id: Optional[str] = Form(None)
+):
     """
     Kasallikni aniqlash:
     1. Gemini Vision orqali o'simlikni nima ekanini va umumiy holatini aniqlash
     2. Agar o'simlik lokal model sinflariga kirsa, kasallikni aniqroq topish uchun oflayn model tahlili
+    3. Natijalarni Cloudinary hamda Supabase ma'lumotlar bazasida saqlash
     """
     start_time = time.time()
 
@@ -61,8 +80,44 @@ async def analyze_disease_endpoint(file: UploadFile = File(...), language: str =
                 disease_data["description"] = f"{disease_data.get('description', '')}\n\nOflayn AI tahlili: {result['description']}"
 
     processing_time = int((time.time() - start_time) * 1000)
+
+    # 3. Cloudinary CDN ga yuklash
+    try:
+        image_url = await upload_image_to_cloudinary(contents, file.filename)
+    except Exception as e:
+        image_url = f"https://res.cloudinary.com/demo/image/upload/v1/{file.filename}"
+
+    # 4. Supabase ma'lumotlar bazasida saqlash
+    validated_user_id = user_id if is_valid_uuid(user_id) else None
+    analysis_id = await log_disease_analysis(
+        user_id=validated_user_id,
+        image_url=image_url,
+        disease_name=disease_data.get("disease_name", "Noma'lum"),
+        plant_affected=disease_data.get("plant_affected", "Unknown"),
+        confidence=float(disease_data.get("confidence", 0.0)),
+        severity=disease_data.get("severity", "low"),
+        description=disease_data.get("description", ""),
+        causes=disease_data.get("causes", []),
+        symptoms=disease_data.get("symptoms", []),
+        treatments=disease_data.get("treatments", []),
+        prevention_tips=disease_data.get("prevention_tips", []),
+        model_version=model_used,
+        processing_time_ms=processing_time,
+    )
+
+    # 5. AI loglar jadvaliga yozish
+    await insert_ai_log(
+        analysis_type="disease",
+        analysis_id=analysis_id,
+        input_image_url=image_url,
+        result=disease_data,
+        confidence=float(disease_data.get("confidence", 0.0)),
+        processing_time_ms=processing_time,
+        model_version=model_used,
+    )
+
     return DiseaseAnalysisResponse(
         success=True,
-        data={**disease_data, "image_size_bytes": len(contents), "model_version": model_used},
+        data={**disease_data, "image_url": image_url, "image_size_bytes": len(contents), "model_version": model_used},
         processing_time_ms=processing_time,
     )

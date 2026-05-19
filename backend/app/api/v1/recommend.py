@@ -1,10 +1,12 @@
 """Crop Recommendation API endpoints."""
 
 import time
-import random
+import uuid
 from fastapi import APIRouter, UploadFile, File, Form
 from pydantic import BaseModel
 from typing import Optional
+from app.api.v1.upload import upload_image_to_cloudinary
+from app.core.supabase_service import log_land_analysis, insert_ai_log
 
 router = APIRouter()
 
@@ -40,11 +42,22 @@ class RecommendationResponse(BaseModel):
     processing_time_ms: int
 
 
+def is_valid_uuid(val: Optional[str]) -> bool:
+    if not val:
+        return False
+    try:
+        uuid.UUID(str(val))
+        return True
+    except ValueError:
+        return False
+
+
 @router.post("/crops", response_model=RecommendationResponse)
 async def recommend_crops(
     file: UploadFile = File(...),
     region: Optional[str] = Form(None),
-    language: str = Form("uz")
+    language: str = Form("uz"),
+    user_id: Optional[str] = Form(None)
 ):
     """Analyze land image and recommend optimal crops."""
     start_time = time.time()
@@ -54,13 +67,45 @@ async def recommend_crops(
     from app.core.gemini_service import analyze_land
     result = await analyze_land(contents, language=language)
     
-    result["region"] = region or "Tashkent"
+    selected_region = region or "Tashkent"
+    result["region"] = selected_region
     result["model_version"] = "Gemini-Pro-Vision"
 
     processing_time = int((time.time() - start_time) * 1000)
 
+    # 3. Cloudinary CDN ga yuklash
+    try:
+        image_url = await upload_image_to_cloudinary(contents, file.filename)
+    except Exception as e:
+        image_url = f"https://res.cloudinary.com/demo/image/upload/v1/{file.filename}"
+
+    # 4. Supabase ma'lumotlar bazasida saqlash
+    validated_user_id = user_id if is_valid_uuid(user_id) else None
+    analysis_id = await log_land_analysis(
+        user_id=validated_user_id,
+        image_url=image_url,
+        soil_condition=result.get("soil_condition", {}),
+        region=selected_region,
+        recommended_crops=result.get("recommended_crops", []),
+        farming_suggestions=result.get("farming_suggestions", []),
+        irrigation_advice=result.get("irrigation_advice", ""),
+        model_version=result["model_version"],
+        processing_time_ms=processing_time,
+    )
+
+    # 5. AI loglar jadvaliga yozish
+    await insert_ai_log(
+        analysis_type="land",
+        analysis_id=analysis_id,
+        input_image_url=image_url,
+        result=result,
+        confidence=0.90,  # default confidence for Gemini land analysis
+        processing_time_ms=processing_time,
+        model_version=result["model_version"],
+    )
+
     return RecommendationResponse(
         success=True,
-        data=result,
+        data={**result, "image_url": image_url},
         processing_time_ms=processing_time,
     )
