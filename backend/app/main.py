@@ -75,15 +75,24 @@ def create_app() -> FastAPI:
         except Exception as e:
             bot_logs = f"Error reading logs: {str(e)}"
             
-        # Check network access to Telegram API
+        # Check network access to Telegram and Google
         telegram_api_ok = False
         telegram_api_err = None
+        google_ok = False
+        google_err = None
         try:
             import urllib.request
             urllib.request.urlopen("https://api.telegram.org", timeout=5)
             telegram_api_ok = True
         except Exception as e:
             telegram_api_err = str(e)
+            
+        try:
+            import urllib.request
+            urllib.request.urlopen("https://google.com", timeout=5)
+            google_ok = True
+        except Exception as e:
+            google_err = str(e)
             
         return {
             "status": "healthy",
@@ -103,6 +112,8 @@ def create_app() -> FastAPI:
                 "process_pids": bot_pid,
                 "api_accessible": telegram_api_ok,
                 "api_error": telegram_api_err,
+                "google_accessible": google_ok,
+                "google_error": google_err,
                 "logs": bot_logs,
             },
             "models": {
