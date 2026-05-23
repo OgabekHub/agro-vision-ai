@@ -45,3 +45,7 @@ coverage/
 # Misc
 *.tgz
 .vercel
+
+# Kaggle dataset folders
+kaggle_notebook/merged_dataset/
+kaggle_notebook/temp_kaggle_data/

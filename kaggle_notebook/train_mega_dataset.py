@@ -1,32 +1,33 @@
 """
-AgroVision AI - Mega Dataset Training Script for Kaggle
-This script is designed to be run in a Kaggle Notebook.
+AgroVision AI - Mega Dataset Training Script
+This script trains an EfficientNet-B2 classifier on the merged agricultural dataset.
+Supports both local execution (on `./merged_dataset` folder) and Kaggle environment.
 
-Steps to use:
-1. Create a New Notebook on Kaggle.
-2. Turn on the GPU (T4 x2 or P100) in the Notebook settings.
-3. Click 'Add Data' and search for a merged dataset, e.g., "Plant Disease Classification Merged Dataset".
-4. Copy and paste this code into a cell.
-5. Update the DATA_DIR variable to match the path of the dataset you added.
-6. Run the code. It will export `plant_disease_model.pth` and `class_names.json`.
+Features:
+- Fixes PyTorch dataset split transforms bug (applies proper validation transforms to the val split)
+- Supports training on 100+ classes dynamically
+- Mixed precision training (AMP) for faster training on GPUs
 """
 
 import os
 import json
+import time
+import copy
+from pathlib import Path
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader, random_split, Dataset
 from torchvision import datasets, transforms, models
 from torch.cuda.amp import GradScaler, autocast
-import time
-import copy
+from PIL import Image
 
 # ==========================================
 # CONFIGURATION
 # ==========================================
-# Update this path to where your Kaggle dataset is mounted!
-DATA_DIR = "/kaggle/input/plant-disease-classification-merged-dataset" 
+# Default path points to `./merged_dataset` created by `download_and_merge.py`.
+# Change this if running in Kaggle and using Kaggle input datasets directly.
+DATA_DIR = "./merged_dataset" 
 
 IMG_SIZE = 224
 BATCH_SIZE = 64
@@ -35,6 +36,30 @@ LEARNING_RATE = 0.001
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 print(f"Using device: {DEVICE}")
+
+# ==========================================
+# DATASET SUBSET TRANSFORM HELPER
+# ==========================================
+class TransformedSubset(Dataset):
+    """
+    Wraps an ImageFolder dataset and its subset indices to apply 
+    different transforms for train and validation splits.
+    """
+    def __init__(self, image_folder_dataset, indices, transform=None):
+        self.dataset = image_folder_dataset
+        self.indices = indices
+        self.transform = transform
+
+    def __getitem__(self, idx):
+        # Retrieve the original image path and label directly from samples list
+        img_path, label = self.dataset.samples[self.indices[idx]]
+        img = self.dataset.loader(img_path)
+        if self.transform:
+            img = self.transform(img)
+        return img, label
+
+    def __len__(self):
+        return len(self.indices)
 
 # ==========================================
 # DATA PREPARATION & AUGMENTATION
@@ -55,32 +80,36 @@ val_transforms = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ])
 
-# Load full dataset
-full_dataset = datasets.ImageFolder(DATA_DIR, transform=train_transforms)
-class_names = full_dataset.classes
+if not os.path.exists(DATA_DIR):
+    raise FileNotFoundError(f"Dataset directory '{DATA_DIR}' not found. Please run download_and_merge.py first.")
+
+# Load full dataset (no transform at root level, transforms applied in TransformedSubset)
+base_dataset = datasets.ImageFolder(DATA_DIR)
+class_names = base_dataset.classes
 num_classes = len(class_names)
-print(f"Found {num_classes} classes and {len(full_dataset)} total images.")
+print(f"Found {num_classes} classes and {len(base_dataset)} total images.")
 
-# Split into Train / Val (80% / 20%)
-train_size = int(0.8 * len(full_dataset))
-val_size = len(full_dataset) - train_size
-train_dataset, val_dataset = random_split(full_dataset, [train_size, val_size])
+# Split indices (80% Train, 20% Validation)
+dataset_size = len(base_dataset)
+train_len = int(0.8 * dataset_size)
+val_len = dataset_size - train_len
 
-# Note: In practice, validation dataset should use val_transforms. 
-# For simplicity in this script, we can re-assign the transform for the val subset if using a custom wrapper, 
-# but PyTorch subsets inherit the original transform.
+# Split indices randomly
+train_indices, val_indices = random_split(range(dataset_size), [train_len, val_len])
 
+# Create subsets with correct transforms
+train_dataset = TransformedSubset(base_dataset, train_indices, transform=train_transforms)
+val_dataset = TransformedSubset(base_dataset, val_indices, transform=val_transforms)
+
+# Dataloaders
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2, pin_memory=True)
 val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=2, pin_memory=True)
 
 # ==========================================
 # MODEL SETUP (EfficientNet-B2)
 # ==========================================
+print(f"Setting up EfficientNet-B2 classifier with {num_classes} classes...")
 model = models.efficientnet_b2(weights=models.EfficientNet_B2_Weights.IMAGENET1K_V1)
-
-# Freeze early layers to speed up training if needed (optional)
-# for param in model.parameters():
-#     param.requires_grad = False
 
 # Replace classifier for our number of classes
 model.classifier = nn.Sequential(
@@ -89,9 +118,9 @@ model.classifier = nn.Sequential(
 )
 
 model = model.to(DEVICE)
-criterion = nn.CrossEntropyLoss()
+criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
 optimizer = optim.AdamW(model.parameters(), lr=LEARNING_RATE, weight_decay=1e-4)
-scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=2)
+scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=EPOCHS)
 scaler = GradScaler()
 
 # ==========================================
@@ -127,8 +156,8 @@ for epoch in range(EPOCHS):
         running_loss += loss.item() * inputs.size(0)
         running_corrects += torch.sum(preds == labels.data)
 
-    train_loss = running_loss / train_size
-    train_acc = running_corrects.double() / train_size
+    train_loss = running_loss / train_len
+    train_acc = running_corrects.double() / train_len
 
     # --- Val Phase ---
     model.eval()
@@ -147,10 +176,10 @@ for epoch in range(EPOCHS):
             val_loss += loss.item() * inputs.size(0)
             val_corrects += torch.sum(preds == labels.data)
 
-    val_loss = val_loss / val_size
-    val_acc = val_corrects.double() / val_size
+    val_loss = val_loss / val_len
+    val_acc = val_corrects.double() / val_len
 
-    scheduler.step(val_acc)
+    scheduler.step()
 
     if val_acc > best_acc:
         best_acc = val_acc
@@ -176,10 +205,14 @@ print("Saved model weights to plant_disease_model.pth")
 # Save class names JSON
 output_data = {
     "num_classes": num_classes,
-    "classes": class_names
+    "classes": class_names,
+    "model": "efficientnet_b2",
+    "img_size": IMG_SIZE,
+    "best_val_acc": float(best_acc)
 }
 with open("class_names.json", "w") as f:
     json.dump(output_data, f, indent=4)
 print("Saved class list to class_names.json")
 
-print("\nDONE! Now you can download `plant_disease_model.pth` and `class_names.json` and put them in your `models_weights` folder in the backend.")
+print("\nDONE! You can now copy `plant_disease_model.pth` and `class_names.json` to the backend models_weights folder.")
+print("Then, run convert_onnx.py to generate the ONNX format model.")

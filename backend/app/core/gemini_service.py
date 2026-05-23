@@ -128,7 +128,7 @@ If the image does NOT contain a plant, return:
 {"is_plant": false, "plant_name": "No plant detected", "confidence": 0.0, "supported_category": "Other"}
 
 confidence should reflect your actual certainty (0.0-1.0). Be precise and accurate.
-CRITICAL: "supported_category" MUST be exactly one of: 'Apple', 'Blueberry', 'Cherry', 'Corn', 'Grape', 'Orange', 'Peach', 'Pepper', 'Potato', 'Raspberry', 'Soybean', 'Squash', 'Strawberry', 'Tomato', or 'Other' if it's none of these."""
+CRITICAL: "supported_category" MUST be exactly one of: 'Apple', 'Blueberry', 'Cherry', 'Corn', 'Grape', 'Orange', 'Peach', 'Pepper', 'Potato', 'Raspberry', 'Soybean', 'Squash', 'Strawberry', 'Tomato', 'Cotton', 'Wheat', 'Rice', 'Citrus', or 'Other' if it's none of these."""
 
 
 DISEASE_PROMPT = """You are an expert plant pathologist specializing in agricultural diseases in Uzbekistan and Central Asia.
@@ -168,7 +168,7 @@ If the plant looks HEALTHY:
 }
 
 Be specific. Mention treatments suitable for small-scale farmers in Uzbekistan.
-CRITICAL: "supported_category" MUST be exactly one of: 'Apple', 'Blueberry', 'Cherry', 'Corn', 'Grape', 'Orange', 'Peach', 'Pepper', 'Potato', 'Raspberry', 'Soybean', 'Squash', 'Strawberry', 'Tomato', or 'Other' if it's none of these."""
+CRITICAL: "supported_category" MUST be exactly one of: 'Apple', 'Blueberry', 'Cherry', 'Corn', 'Grape', 'Orange', 'Peach', 'Pepper', 'Potato', 'Raspberry', 'Soybean', 'Squash', 'Strawberry', 'Tomato', 'Cotton', 'Wheat', 'Rice', 'Citrus', or 'Other' if it's none of these."""
 
 
 async def analyze_plant(image_bytes: bytes, language: str = "uz") -> dict:
