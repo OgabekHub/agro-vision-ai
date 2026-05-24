@@ -1,6 +1,6 @@
 """
-Local EfficientNet-B2 inference — Gemini'siz, oflayn ishlaydi
-99.95% aniqlik, 38 ta kasallik/o'simlik turi
+Local EfficientNet-B3 inference — Gemini'siz, oflayn ishlaydi
+109 ta kasallik/o'simlik turi/zararkunanda
 """
 
 import os
@@ -20,9 +20,9 @@ logger = logging.getLogger(__name__)
 
 # Model yo'li
 BASE = Path(__file__).parent.parent.parent / "models_weights"
-MODEL_PATH = BASE / "plant_disease_model.pth"
+MODEL_PATH = BASE / "mega_plant_disease_model.pth"
 if not MODEL_PATH.exists():
-    MODEL_PATH = BASE / "mega_plant_disease_model.pth"
+    MODEL_PATH = BASE / "plant_disease_model.pth"
 CLASSES_PATH = BASE / "class_names.json"
 
 IMG_SIZE = 224
@@ -68,10 +68,11 @@ def _load_model():
             _classes = _classes["classes"]
         num_classes = len(_classes)
 
-        m = models.efficientnet_b2(weights=None)
-        m.classifier = nn.Sequential(
+        m = models.efficientnet_b3(weights=None)
+        in_features = m.classifier[1].in_features
+        m.classifier[1] = nn.Sequential(
             nn.Dropout(0.3),
-            nn.Linear(m.classifier[1].in_features, num_classes),
+            nn.Linear(in_features, num_classes),
         )
         state = torch.load(MODEL_PATH, map_location="cpu", weights_only=True)
         m.load_state_dict(state)

@@ -11,7 +11,9 @@ def main():
     # Paths
     backend_dir = os.path.dirname(os.path.abspath(__file__)) if '__file__' in globals() else "."
     weights_dir = os.path.join(backend_dir, "models_weights")
-    model_path = os.path.join(weights_dir, "plant_disease_model.pth")
+    model_path = os.path.join(weights_dir, "mega_plant_disease_model.pth")
+    if not os.path.exists(model_path):
+        model_path = os.path.join(weights_dir, "plant_disease_model.pth")
     classes_path = os.path.join(weights_dir, "class_names.json")
     onnx_path = os.path.join(weights_dir, "plant_disease_model.onnx")
     
@@ -32,10 +34,11 @@ def main():
 
     # Reconstruct the PyTorch model
     print("Reconstructing PyTorch model...")
-    model = models.efficientnet_b2(weights=None)
-    model.classifier = nn.Sequential(
+    model = models.efficientnet_b3(weights=None)
+    in_features = model.classifier[1].in_features
+    model.classifier[1] = nn.Sequential(
         nn.Dropout(0.3),
-        nn.Linear(model.classifier[1].in_features, num_classes),
+        nn.Linear(in_features, num_classes),
     )
 
     # Load weights
@@ -61,9 +64,9 @@ def main():
     
     if os.path.exists(onnx_path):
         size_mb = os.path.getsize(onnx_path) / (1024 * 1024)
-        print(f"✅ Success! ONNX model exported to {onnx_path} ({size_mb:.2f} MB)")
+        print(f"Success! ONNX model exported to {onnx_path} ({size_mb:.2f} MB)")
     else:
-        print("❌ Export failed!")
+        print("Export failed!")
 
 if __name__ == "__main__":
     main()
