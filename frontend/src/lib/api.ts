@@ -2,7 +2,9 @@
 // AgroVision AI — API Client
 // ===========================
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE = typeof window !== "undefined"
+  ? "" // relative URL in browser to trigger next.config.ts rewrites
+  : (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000");
 
 class ApiClient {
   private baseUrl: string;
@@ -67,36 +69,36 @@ class ApiClient {
 
   // Weather
   async getWeather(region: string) {
-    return this.request(`/api/v1/weather/${encodeURIComponent(region)}`);
+    return this.request<any>(`/api/v1/weather/${encodeURIComponent(region)}`);
   }
 
   // Regions
   async getRegions() {
-    return this.request("/api/v1/regions");
+    return this.request<any>("/api/v1/regions");
   }
 
   async getRegion(id: string) {
-    return this.request(`/api/v1/regions/${id}`);
+    return this.request<any>(`/api/v1/regions/${id}`);
   }
 
   // Admin
   async getAdminLogs(page = 1, limit = 20) {
-    return this.request(`/api/v1/admin/logs?page=${page}&limit=${limit}`);
+    return this.request<any>(`/api/v1/admin/logs?page=${page}&limit=${limit}`);
   }
 
   async getAdminStats() {
-    return this.request("/api/v1/admin/stats");
+    return this.request<any>("/api/v1/admin/stats");
   }
 
   async getAdminUsers(page = 1, limit = 20) {
-    return this.request(`/api/v1/admin/users?page=${page}&limit=${limit}`);
+    return this.request<any>(`/api/v1/admin/users?page=${page}&limit=${limit}`);
   }
 
   // Upload Image (to Cloudinary via backend)
   async uploadImage(imageFile: File) {
     const formData = new FormData();
     formData.append("file", imageFile);
-    return this.request("/api/v1/upload/image", {
+    return this.request<any>("/api/v1/upload/image", {
       method: "POST",
       body: formData,
     });
