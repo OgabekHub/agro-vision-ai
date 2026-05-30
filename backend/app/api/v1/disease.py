@@ -56,28 +56,50 @@ async def analyze_disease_endpoint(
 
     # 2. Agar o'simlik bizning ro'yxatda bo'lsa, kasallikni Local Model bilan tahlil qilamiz
     category = disease_data.get("supported_category", "Other")
+    is_gemini_mock = disease_data.get("disease_name") == "AI sozlanmagan"
 
-    if category != "Other" and local_model_service.is_model_available() and disease_data.get("has_disease") is not None:
-        result = local_model_service.predict(contents, filter_category=category)
+    if local_model_service.is_model_available():
+        # Agar Gemini mock bo'lsa yoki category Other bo'lsa, lokal modelni filtrsiz (barcha klasslar uchun) ishlatamiz
+        filter_cat = None if (is_gemini_mock or category == "Other") else category
+        result = local_model_service.predict(contents, filter_category=filter_cat)
+        
         if result:
-            model_used = "gemini_and_local_hybrid"
-            # Mahalliy modelning ishonchli va aniq javoblarini qo'shamiz
-            disease_data.update({
-                "disease_name": result["disease_name"],
-                "plant_affected": result["plant_name"],
-                "local_confidence": result["confidence"],
-                "severity": result["severity"],
-                "has_disease": not result["is_healthy"],
-                "top3_predictions": result.get("top3", []),
-            })
-            
-            # Agar lokal model davolash usullarini topsa, ularni ustun qo'yamiz
-            if result["treatments"]:
-                disease_data["treatments"] = result["treatments"]
-            
-            # Description'ga qo'shimcha kiritamiz
-            if not result["is_healthy"]:
-                disease_data["description"] = f"{disease_data.get('description', '')}\n\nOflayn AI tahlili: {result['description']}"
+            # Agar Gemini ishlamagan bo'lsa, yoki Gemini o'simlikni topolmagan bo'lsa-yu lekin lokal model yuqori ishonch (confidence > 0.6) bilan topsa
+            if is_gemini_mock or (category == "Other" and result["confidence"] > 0.6):
+                model_used = "local_offline_model"
+                disease_data = {
+                    "disease_name": result["disease_name"],
+                    "plant_affected": result["plant_name"],
+                    "supported_category": result["raw_class"].split("__")[0] if "__" in result["raw_class"] else "Other",
+                    "confidence": result["confidence"],
+                    "severity": result["severity"],
+                    "description": result["description"],
+                    "causes": [],
+                    "symptoms": [],
+                    "treatments": result["treatments"],
+                    "prevention_tips": [],
+                    "has_disease": not result["is_healthy"],
+                    "top3_predictions": result.get("top3", []),
+                }
+            else:
+                model_used = "gemini_and_local_hybrid"
+                # Mahalliy modelning ishonchli va aniq javoblarini qo'shamiz
+                disease_data.update({
+                    "disease_name": result["disease_name"],
+                    "plant_affected": result["plant_name"],
+                    "local_confidence": result["confidence"],
+                    "severity": result["severity"],
+                    "has_disease": not result["is_healthy"],
+                    "top3_predictions": result.get("top3", []),
+                })
+                
+                # Agar lokal model davolash usullarini topsa, ularni ustun qo'yamiz
+                if result["treatments"]:
+                    disease_data["treatments"] = result["treatments"]
+                
+                # Description'ga qo'shimcha kiritamiz
+                if not result["is_healthy"]:
+                    disease_data["description"] = f"{disease_data.get('description', '')}\n\nOflayn AI tahlili: {result['description']}"
 
     processing_time = int((time.time() - start_time) * 1000)
 
