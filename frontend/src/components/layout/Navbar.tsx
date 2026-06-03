@@ -22,6 +22,7 @@ import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 
 export default function Navbar() {
   const t = useTranslations("nav");
+  const tc = useTranslations("common");
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -79,7 +80,7 @@ export default function Navbar() {
                   Agro<span className="text-[var(--color-primary)]">Vision</span>
                 </span>
                 <span className="text-[9px] uppercase tracking-[0.15em] text-[var(--color-text-muted)]">
-                  AI Platform
+                  {tc("aiPlatform")}
                 </span>
               </div>
             </Link>
@@ -127,7 +128,7 @@ export default function Navbar() {
                 className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap text-[var(--color-text-secondary)] hover:text-[#29B6F6] hover:bg-[#29B6F6]/10 transition-all duration-200 border border-transparent hover:border-[#29B6F6]/20"
               >
                 <Send className="w-3.5 h-3.5 flex-shrink-0" />
-                <span className="hidden xl:inline">Telegram</span>
+                <span className="hidden xl:inline">{tc("telegramBot").split(" ")[0]}</span>
               </a>
               <Link
                 href="/dashboard"
@@ -210,7 +211,7 @@ export default function Navbar() {
                   className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl text-sm font-medium border border-[#29B6F6]/30 text-[#29B6F6] bg-[#29B6F6]/10 hover:bg-[#29B6F6]/20 transition-all"
                 >
                   <Send className="w-4 h-4" />
-                  Telegram Bot
+                  {tc("telegramBot")}
                 </a>
               </div>
             </motion.div>

@@ -24,6 +24,7 @@
       "accuracy": "AI aniqligi"
     },
     "features": {
+      "sectionLabel": "Xususiyatlar",
       "title": "To'liq AI Qishloq Xo'jaligi",
       "titleHighlight": "Vositalari",
       "subtitle": "O'zbekistonning xilma-xil qishloq xo'jaligi landshafti uchun maxsus ishlab chiqilgan oltita kuchli AI vositalar.",
@@ -218,7 +219,15 @@
     "save": "Saqlash",
     "cancel": "Bekor qilish",
     "operational": "Barcha AI tizimlari ishlamoqda",
-    "aiPlatform": "AI Platforma"
+    "aiPlatform": "AI Platforma",
+    "telegramBot": "Telegram Bot",
+    "dropzone": {
+      "releaseToUpload": "Yuklash uchun qo'yib yuboring",
+      "fileTooLarge": "Fayl juda katta. Maksimal hajm: {size}",
+      "invalidType": "Noto'g'ri fayl turi. Iltimos JPEG, PNG yoki WebP yuklang.",
+      "rejected": "Fayl rad etildi. Qayta urinib ko'ring.",
+      "uploadPreview": "Yuklash ko'rinishi"
+    }
   },
   "footer": {
     "description": "O'zbekiston uchun mo'ljallangan o'simliklarni aniqlash, kasalliklarni tahlil qilish va ekin tavsiyalari uchun kompyuter ko'rishidan foydalanadigan AI-asosli qishloq xo'jaligi platformasi.",

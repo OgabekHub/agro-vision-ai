@@ -24,6 +24,7 @@
       "accuracy": "AI Accuracy"
     },
     "features": {
+      "sectionLabel": "Features",
       "title": "Complete AI Agriculture",
       "titleHighlight": "Toolkit",
       "subtitle": "Six powerful AI-driven tools designed specifically for Uzbekistan's diverse agricultural landscape.",
@@ -218,7 +219,15 @@
     "save": "Save",
     "cancel": "Cancel",
     "operational": "All AI systems operational",
-    "aiPlatform": "AI Platform"
+    "aiPlatform": "AI Platform",
+    "telegramBot": "Telegram Bot",
+    "dropzone": {
+      "releaseToUpload": "Release to upload",
+      "fileTooLarge": "File too large. Max size: {size}",
+      "invalidType": "Invalid file type. Please upload JPEG, PNG, or WebP.",
+      "rejected": "File rejected. Please try again.",
+      "uploadPreview": "Upload preview"
+    }
   },
   "footer": {
     "description": "AI-powered smart agriculture platform using computer vision for plant detection, disease analysis, and crop recommendations tailored for Uzbekistan.",

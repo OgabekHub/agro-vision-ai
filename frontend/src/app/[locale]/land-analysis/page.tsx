@@ -133,12 +133,20 @@ export default function LandAnalysisPage() {
                     ))}
                   </div>
                   <div className="grid grid-cols-3 gap-3">
-                    {Object.entries(result.soil_condition.nutrients).map(([key, val]) => (
-                      <div key={key} className="p-2 rounded-lg bg-white/3 border border-white/5 text-center">
-                        <p className="text-xs text-[var(--color-text-muted)] capitalize">{key}</p>
-                        <p className="text-sm font-semibold" style={{ color: val === "Low" ? "#EF4444" : val === "High" ? "#00FF88" : "#F59E0B" }}>{val}</p>
-                      </div>
-                    ))}
+                    {Object.entries(result.soil_condition.nutrients).map(([key, val]) => {
+                      const valLower = String(val).toLowerCase();
+                      const color = valLower === "low" || valLower === "past" || valLower === "низкий"
+                        ? "#EF4444"
+                        : valLower === "high" || valLower === "yuqori" || valLower === "высокий"
+                        ? "#00FF88"
+                        : "#F59E0B";
+                      return (
+                        <div key={key} className="p-2 rounded-lg bg-white/3 border border-white/5 text-center">
+                          <p className="text-xs text-[var(--color-text-muted)] capitalize">{key}</p>
+                          <p className="text-sm font-semibold" style={{ color }}>{val}</p>
+                        </div>
+                      );
+                    })}
                   </div>
                 </GlassCard>
 

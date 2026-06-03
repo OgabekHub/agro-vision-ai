@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
 import { Upload, X, Image as ImageIcon, CheckCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn, formatFileSize } from "@/lib/utils";
 
 interface ImageDropzoneProps {
@@ -22,11 +23,12 @@ export default function ImageDropzone({
   onClear,
   accept = ["image/jpeg", "image/png", "image/webp"],
   maxSize = 10 * 1024 * 1024,
-  label = "Drop your image here",
-  sublabel = "or click to browse (JPEG, PNG, WebP — max 10MB)",
+  label,
+  sublabel,
   className,
   disabled = false,
 }: ImageDropzoneProps) {
+  const tc = useTranslations("common");
   const [preview, setPreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [fileSize, setFileSize] = useState<number>(0);
@@ -39,7 +41,7 @@ export default function ImageDropzone({
 
       const file = acceptedFiles[0];
       if (file.size > maxSize) {
-        setError(`File too large. Max size: ${formatFileSize(maxSize)}`);
+        setError(tc("dropzone.fileTooLarge", { size: formatFileSize(maxSize) }));
         return;
       }
 
@@ -54,7 +56,7 @@ export default function ImageDropzone({
 
       onImageSelect(file);
     },
-    [onImageSelect, maxSize]
+    [onImageSelect, maxSize, tc]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -65,11 +67,11 @@ export default function ImageDropzone({
     onDropRejected: (rejections) => {
       const rejection = rejections[0];
       if (rejection?.errors[0]?.code === "file-too-large") {
-        setError(`File too large. Max size: ${formatFileSize(maxSize)}`);
+        setError(tc("dropzone.fileTooLarge", { size: formatFileSize(maxSize) }));
       } else if (rejection?.errors[0]?.code === "file-invalid-type") {
-        setError("Invalid file type. Please upload JPEG, PNG, or WebP.");
+        setError(tc("dropzone.invalidType"));
       } else {
-        setError("File rejected. Please try again.");
+        setError(tc("dropzone.rejected"));
       }
     },
   });
@@ -82,6 +84,9 @@ export default function ImageDropzone({
     setError(null);
     onClear?.();
   };
+
+  // Default label/sublabel fallback uses translation keys if not provided by caller
+  const displayLabel = label ?? tc("dropzone.releaseToUpload");
 
   return (
     <div className={cn("w-full", className)}>
@@ -117,7 +122,7 @@ export default function ImageDropzone({
               <div className="relative w-full max-w-xs aspect-square rounded-xl overflow-hidden border border-[var(--color-border-glow)]">
                 <img
                   src={preview}
-                  alt="Upload preview"
+                  alt={tc("dropzone.uploadPreview")}
                   className="w-full h-full object-cover"
                 />
                 {/* Scan line effect */}
@@ -160,7 +165,7 @@ export default function ImageDropzone({
               </motion.div>
 
               <p className="text-base font-medium text-[var(--color-text-primary)] mb-1">
-                {isDragActive ? "Release to upload" : label}
+                {isDragActive ? tc("dropzone.releaseToUpload") : displayLabel}
               </p>
               <p className="text-sm text-[var(--color-text-muted)]">
                 {sublabel}
