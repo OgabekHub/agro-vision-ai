@@ -147,22 +147,38 @@ def create_app() -> FastAPI:
     @app.get("/test-gemini-key", tags=["Debug"])
     async def test_gemini_key():
         import httpx
+        import base64
+        import os
         key = settings.GEMINI_API_KEY
         if not key:
             return {"status": "error", "message": "GEMINI_API_KEY setting is empty"}
             
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
-        payload = {
-            "contents": [{"parts": [{"text": "Say test"}]}]
-        }
         
+        img_path = "test_leaf.jpg"
+        if not os.path.exists(img_path):
+            img_path = "/code/backend/test_leaf.jpg"
+            
         try:
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            with open(img_path, "rb") as f:
+                img_bytes = f.read()
+            b64_img = base64.b64encode(img_bytes).decode()
+            
+            payload = {
+                "contents": [{
+                    "parts": [
+                        {"text": "Analyze this image and identify the plant. Return JSON only."},
+                        {"inlineData": {"mimeType": "image/jpeg", "data": b64_img}}
+                    ]
+                }]
+            }
+            
+            async with httpx.AsyncClient(timeout=30.0) as client:
                 resp = await client.post(url, json=payload)
                 return {
                     "status": "completed",
                     "http_status": resp.status_code,
-                    "response_text": resp.text[:1000],
+                    "response_text": resp.text[:2000],
                     "headers": dict(resp.headers),
                 }
         except Exception as e:
