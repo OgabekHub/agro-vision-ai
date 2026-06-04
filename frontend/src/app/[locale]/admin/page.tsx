@@ -6,6 +6,8 @@ import { useTranslations, useLocale } from "next-intl";
 import { Shield, BarChart3, Image, Users, FileText, Activity, Leaf, Bug, Mountain, Eye, Trash2, Search } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
 import { api } from "@/lib/api";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "@/i18n/routing";
 
 const logs = [
   { id: "1", type: "plant" as const, result: "Cotton detected", confidence: 0.946, time: "2 min ago", processing: 234, model: "YOLOv8n" },
@@ -31,9 +33,42 @@ export default function AdminPage() {
   const t = useTranslations("admin");
   const tc = useTranslations("common");
   const locale = useLocale();
+  const { user, loading } = useAuth();
+  const router = useRouter();
+  
   const [activeTab, setActiveTab] = useState<Tab>("overview");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLog, setSelectedLog] = useState<any>(null);
+
+  // Authenticate & Authorization check
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[var(--color-bg-dark)] flex items-center justify-center text-[var(--color-text-secondary)] text-sm">
+        Yuklanmoqda...
+      </div>
+    );
+  }
+
+  if (!user || user.role !== "admin") {
+    return (
+      <div className="min-h-[80vh] bg-[var(--color-bg-dark)] flex items-center justify-center px-4">
+        <GlassCard className="max-w-md w-full p-8 text-center border border-red-500/20 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-red-500" />
+          <Shield className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-white mb-2">Kirish taqiqlangan</h2>
+          <p className="text-sm text-[var(--color-text-secondary)] mb-6 leading-relaxed">
+            Ushbu sahifaga kirish taqiqlangan. Sizda kerakli huquqlar (Admin roli) mavjud emas.
+          </p>
+          <button
+            onClick={() => router.push("/")}
+            className="btn-primary w-full py-2.5 rounded-xl text-xs font-semibold"
+          >
+            Bosh sahifaga qaytish
+          </button>
+        </GlassCard>
+      </div>
+    );
+  }
 
   const deleteBtnText = {
     uz: "O'chirish",

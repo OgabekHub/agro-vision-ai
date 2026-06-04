@@ -2,12 +2,59 @@
 
 import random
 import logging
-from fastapi import APIRouter
+from typing import Optional
+from fastapi import APIRouter, Header, HTTPException, Depends, status
 from pydantic import BaseModel
 from app.core.supabase_service import get_supabase
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+
+async def get_current_admin(authorization: Optional[str] = Header(None)) -> dict:
+    """Dependency that checks if request token is valid and user is an admin."""
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token topilmadi yoki noto'g'ri",
+        )
+        
+    token = authorization.split(" ")[1]
+    client = get_supabase()
+    if not client:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Ma'lumotlar bazasi bilan aloqa yo'q",
+        )
+        
+    try:
+        user_res = client.auth.get_user(token)
+        if not user_res or not user_res.user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Yaroqsiz token",
+            )
+            
+        user_profile = client.table("users").select("*").eq("id", user_res.user.id).execute().data
+        if not user_profile:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Profil topilmadi",
+            )
+            
+        role = user_profile[0].get("role", "user")
+        if role != "admin":
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Ushbu amalni bajarish uchun ruxsatingiz yo'q (Admin huquqi talab qilinadi)",
+            )
+            
+        return user_profile[0]
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token muddati o'tgan yoki yaroqsiz",
+        )
 
 
 class AdminStatsResponse(BaseModel):
@@ -96,7 +143,7 @@ async def debug_db():
 
 
 @router.get("/stats", response_model=AdminStatsResponse)
-async def get_stats():
+async def get_stats(admin: dict = Depends(get_current_admin)):
     """Get admin dashboard statistics from database."""
     client = get_supabase()
     if not client:
@@ -140,7 +187,7 @@ async def get_stats():
 
 
 @router.get("/logs", response_model=AdminLogsResponse)
-async def get_logs(page: int = 1, limit: int = 20):
+async def get_logs(page: int = 1, limit: int = 20, admin: dict = Depends(get_current_admin)):
     """Get AI analysis logs from database."""
     client = get_supabase()
     if not client:
@@ -184,7 +231,7 @@ async def get_logs(page: int = 1, limit: int = 20):
 
 
 @router.get("/users", response_model=AdminUsersResponse)
-async def get_users(page: int = 1, limit: int = 20):
+async def get_users(page: int = 1, limit: int = 20, admin: dict = Depends(get_current_admin)):
     """Get registered users from database."""
     client = get_supabase()
     if not client:
@@ -216,7 +263,7 @@ async def get_users(page: int = 1, limit: int = 20):
 
 
 @router.delete("/logs/{log_id}")
-async def delete_log(log_id: str):
+async def delete_log(log_id: str, admin: dict = Depends(get_current_admin)):
     """Delete an AI log from database."""
     client = get_supabase()
     if not client:
@@ -230,7 +277,7 @@ async def delete_log(log_id: str):
 
 
 @router.get("/bot-log")
-async def get_bot_log():
+async def get_bot_log(admin: dict = Depends(get_current_admin)):
     import os
     log_path = "/code/bot.log"
     if not os.path.exists(log_path):

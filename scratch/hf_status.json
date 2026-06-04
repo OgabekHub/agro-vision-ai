@@ -1,0 +1,328 @@
+{
+  "_id": "6a099ce84c818d90e9d8d303",
+  "id": "ogabekolimjonov/agro-vision-ai",
+  "sdk": "docker",
+  "likes": 0,
+  "tags": [
+    "docker",
+    "region:us"
+  ],
+  "private": false,
+  "author": "ogabekolimjonov",
+  "sha": "4b5266908127c0f9e10212be4e82b0e5f2d6395f",
+  "lastModified": "2026-06-04T06:57:04.000Z",
+  "cardData": {
+    "title": "AgroVision AI",
+    "emoji": "\ud83c\udf31",
+    "colorFrom": "green",
+    "colorTo": "green",
+    "sdk": "docker",
+    "app_port": 7860,
+    "pinned": false
+  },
+  "subdomain": "ogabekolimjonov-agro-vision-ai",
+  "gated": false,
+  "disabled": false,
+  "host": "https://ogabekolimjonov-agro-vision-ai.hf.space",
+  "runtime": {
+    "stage": "RUNNING",
+    "hardware": {
+      "current": "cpu-basic",
+      "requested": "cpu-basic"
+    },
+    "gcTimeout": 172800,
+    "replicas": {
+      "current": 1,
+      "requested": 1
+    },
+    "devMode": false,
+    "domains": [
+      {
+        "domain": "ogabekolimjonov-agro-vision-ai.hf.space",
+        "stage": "READY"
+      }
+    ],
+    "sha": "4b5266908127c0f9e10212be4e82b0e5f2d6395f",
+    "pySpacesVersion": "0.50.2"
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes"
+    },
+    {
+      "rfilename": ".gitignore"
+    },
+    {
+      "rfilename": "Dockerfile"
+    },
+    {
+      "rfilename": "README.md"
+    },
+    {
+      "rfilename": "backend/.env.example"
+    },
+    {
+      "rfilename": "backend/app/__init__.py"
+    },
+    {
+      "rfilename": "backend/app/api/__init__.py"
+    },
+    {
+      "rfilename": "backend/app/api/v1/__init__.py"
+    },
+    {
+      "rfilename": "backend/app/api/v1/admin.py"
+    },
+    {
+      "rfilename": "backend/app/api/v1/disease.py"
+    },
+    {
+      "rfilename": "backend/app/api/v1/plant.py"
+    },
+    {
+      "rfilename": "backend/app/api/v1/recommend.py"
+    },
+    {
+      "rfilename": "backend/app/api/v1/regions.py"
+    },
+    {
+      "rfilename": "backend/app/api/v1/router.py"
+    },
+    {
+      "rfilename": "backend/app/api/v1/upload.py"
+    },
+    {
+      "rfilename": "backend/app/api/v1/weather.py"
+    },
+    {
+      "rfilename": "backend/app/core/__init__.py"
+    },
+    {
+      "rfilename": "backend/app/core/config.py"
+    },
+    {
+      "rfilename": "backend/app/core/gemini_service.py"
+    },
+    {
+      "rfilename": "backend/app/core/local_model_service.py"
+    },
+    {
+      "rfilename": "backend/app/core/supabase_service.py"
+    },
+    {
+      "rfilename": "backend/app/main.py"
+    },
+    {
+      "rfilename": "backend/convert_onnx.py"
+    },
+    {
+      "rfilename": "backend/models_weights/.gitkeep"
+    },
+    {
+      "rfilename": "backend/models_weights/class_names.json"
+    },
+    {
+      "rfilename": "backend/models_weights/mega_plant_disease_model.pth"
+    },
+    {
+      "rfilename": "backend/requirements.txt"
+    },
+    {
+      "rfilename": "backend/test_all_endpoints.py"
+    },
+    {
+      "rfilename": "backend/test_api_key.py"
+    },
+    {
+      "rfilename": "backend/test_disease.py"
+    },
+    {
+      "rfilename": "backend/test_gemini.py"
+    },
+    {
+      "rfilename": "backend/test_leaf.jpg"
+    },
+    {
+      "rfilename": "backend/test_model.py"
+    },
+    {
+      "rfilename": "backend/test_recommend.py"
+    },
+    {
+      "rfilename": "backend/test_services.py"
+    },
+    {
+      "rfilename": "database/schema.sql"
+    },
+    {
+      "rfilename": "entrypoint.sh"
+    },
+    {
+      "rfilename": "frontend/.env.local.example"
+    },
+    {
+      "rfilename": "frontend/messages/en.json"
+    },
+    {
+      "rfilename": "frontend/messages/ru.json"
+    },
+    {
+      "rfilename": "frontend/messages/uz.json"
+    },
+    {
+      "rfilename": "frontend/middleware.ts"
+    },
+    {
+      "rfilename": "frontend/next-env.d.ts"
+    },
+    {
+      "rfilename": "frontend/next.config.ts"
+    },
+    {
+      "rfilename": "frontend/package-lock.json"
+    },
+    {
+      "rfilename": "frontend/package.json"
+    },
+    {
+      "rfilename": "frontend/postcss.config.mjs"
+    },
+    {
+      "rfilename": "frontend/src/app/[locale]/admin/page.tsx"
+    },
+    {
+      "rfilename": "frontend/src/app/[locale]/dashboard/page.tsx"
+    },
+    {
+      "rfilename": "frontend/src/app/[locale]/disease-analysis/page.tsx"
+    },
+    {
+      "rfilename": "frontend/src/app/[locale]/land-analysis/page.tsx"
+    },
+    {
+      "rfilename": "frontend/src/app/[locale]/layout.tsx"
+    },
+    {
+      "rfilename": "frontend/src/app/[locale]/page.tsx"
+    },
+    {
+      "rfilename": "frontend/src/app/[locale]/regions/page.tsx"
+    },
+    {
+      "rfilename": "frontend/src/app/globals.css"
+    },
+    {
+      "rfilename": "frontend/src/components/analysis/AnalysisLoader.tsx"
+    },
+    {
+      "rfilename": "frontend/src/components/analysis/ConfidenceGauge.tsx"
+    },
+    {
+      "rfilename": "frontend/src/components/analysis/DiseaseResultCard.tsx"
+    },
+    {
+      "rfilename": "frontend/src/components/analysis/PlantResultCard.tsx"
+    },
+    {
+      "rfilename": "frontend/src/components/layout/Footer.tsx"
+    },
+    {
+      "rfilename": "frontend/src/components/layout/Navbar.tsx"
+    },
+    {
+      "rfilename": "frontend/src/components/ui/GlassCard.tsx"
+    },
+    {
+      "rfilename": "frontend/src/components/ui/LanguageSwitcher.tsx"
+    },
+    {
+      "rfilename": "frontend/src/components/upload/ImageDropzone.tsx"
+    },
+    {
+      "rfilename": "frontend/src/i18n/request.ts"
+    },
+    {
+      "rfilename": "frontend/src/i18n/routing.ts"
+    },
+    {
+      "rfilename": "frontend/src/lib/api.ts"
+    },
+    {
+      "rfilename": "frontend/src/lib/utils.ts"
+    },
+    {
+      "rfilename": "frontend/src/types/index.ts"
+    },
+    {
+      "rfilename": "frontend/tsconfig.json"
+    },
+    {
+      "rfilename": "frontend/tsconfig.tsbuildinfo"
+    },
+    {
+      "rfilename": "kaggle_notebook/agrovision_train.ipynb"
+    },
+    {
+      "rfilename": "kaggle_notebook/download_and_merge.py"
+    },
+    {
+      "rfilename": "kaggle_notebook/train_mega_dataset.py"
+    },
+    {
+      "rfilename": "telegram_bot/bot.py"
+    },
+    {
+      "rfilename": "telegram_bot/handlers/__init__.py"
+    },
+    {
+      "rfilename": "telegram_bot/handlers/callbacks.py"
+    },
+    {
+      "rfilename": "telegram_bot/handlers/photo.py"
+    },
+    {
+      "rfilename": "telegram_bot/handlers/start.py"
+    },
+    {
+      "rfilename": "telegram_bot/i18n/__init__.py"
+    },
+    {
+      "rfilename": "telegram_bot/i18n/messages.py"
+    },
+    {
+      "rfilename": "telegram_bot/render.yaml"
+    },
+    {
+      "rfilename": "telegram_bot/requirements.txt"
+    },
+    {
+      "rfilename": "telegram_bot/run.py"
+    },
+    {
+      "rfilename": "telegram_bot/services/__init__.py"
+    },
+    {
+      "rfilename": "telegram_bot/services/ai_service.py"
+    },
+    {
+      "rfilename": "telegram_bot/services/formatter.py"
+    },
+    {
+      "rfilename": "telegram_bot/services/keyboards.py"
+    },
+    {
+      "rfilename": "telegram_bot/services/user_store.py"
+    },
+    {
+      "rfilename": "test_db_insert.py"
+    },
+    {
+      "rfilename": "test_db_queries.py"
+    },
+    {
+      "rfilename": "test_logs_query.py"
+    }
+  ],
+  "createdAt": "2026-05-17T10:48:08.000Z",
+  "usedStorage": 119803831
+}

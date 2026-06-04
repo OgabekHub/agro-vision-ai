@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
   const t = useTranslations("nav");
@@ -26,15 +27,19 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { user, logout } = useAuth();
 
-  const navLinks = [
-    { href: "/" as const, label: t("home"), icon: Leaf },
-    { href: "/dashboard" as const, label: t("dashboard"), icon: LayoutDashboard },
-    { href: "/disease-analysis" as const, label: t("diseaseAnalysis"), icon: Bug },
-    { href: "/land-analysis" as const, label: t("landAnalysis"), icon: Mountain },
-    { href: "/regions" as const, label: t("regions"), icon: MapPin },
-    { href: "/admin" as const, label: t("admin"), icon: Shield },
+  const navLinks: { href: string; label: string; icon: any }[] = [
+    { href: "/", label: t("home"), icon: Leaf },
+    { href: "/dashboard", label: t("dashboard"), icon: LayoutDashboard },
+    { href: "/disease-analysis", label: t("diseaseAnalysis"), icon: Bug },
+    { href: "/land-analysis", label: t("landAnalysis"), icon: Mountain },
+    { href: "/regions", label: t("regions"), icon: MapPin },
   ];
+
+  if (user?.role === "admin") {
+    navLinks.push({ href: "/admin", label: t("admin"), icon: Shield });
+  }
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -116,7 +121,7 @@ export default function Navbar() {
               })}
             </div>
 
-            {/* Right side: Language Switcher + Telegram + CTA */}
+            {/* Right side: Language Switcher + Telegram + Auth/CTA */}
             <div className="hidden lg:flex items-center gap-2 flex-shrink-0">
               <LanguageSwitcher />
               {/* Telegram Bot tugmasi */}
@@ -130,13 +135,37 @@ export default function Navbar() {
                 <Send className="w-3.5 h-3.5 flex-shrink-0" />
                 <span className="hidden xl:inline">{tc("telegramBot").split(" ")[0]}</span>
               </a>
-              <Link
-                href="/dashboard"
-                className="btn-primary text-xs py-2 px-3 whitespace-nowrap xl:text-sm xl:py-2.5 xl:px-5"
-              >
-                <Zap className="w-4 h-4 flex-shrink-0" />
-                <span className="hidden xl:inline">{t("startAnalysis")}</span>
-              </Link>
+
+              {user ? (
+                <div className="flex items-center gap-3 ml-1 bg-white/5 border border-white/5 pl-3 pr-2 py-1.5 rounded-xl">
+                  <div className="flex flex-col items-end leading-none">
+                    <span className="text-xs font-bold text-white">{user.full_name}</span>
+                    <span className="text-[9px] text-[var(--color-text-muted)] capitalize mt-0.5">{user.role}</span>
+                  </div>
+                  <button
+                    onClick={logout}
+                    className="px-3 py-1.5 rounded-lg text-xs font-semibold text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-all"
+                  >
+                    Chiqish
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/login"
+                    className="px-3 py-2 rounded-lg text-xs font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-white/5 transition-all"
+                  >
+                    Kirish
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="btn-primary text-xs py-2 px-3 whitespace-nowrap xl:text-sm xl:py-2.5 xl:px-4"
+                  >
+                    <Zap className="w-4 h-4 flex-shrink-0" />
+                    <span>Ro'yxatdan o'tish</span>
+                  </Link>
+                </div>
+              )}
             </div>
 
             {/* Mobile Toggle */}
@@ -200,10 +229,40 @@ export default function Navbar() {
                 })}
               </div>
               <div className="mt-6 pt-6 border-t border-white/5 flex flex-col gap-3">
-                <Link href="/dashboard" className="btn-primary w-full text-sm py-3" onClick={() => setIsMobileOpen(false)}>
-                  <Zap className="w-4 h-4" />
-                  {t("startAnalysis")}
-                </Link>
+                {user ? (
+                  <div className="flex flex-col gap-2 p-3 bg-white/5 rounded-xl border border-white/5">
+                    <span className="text-sm font-bold text-white leading-none">{user.full_name}</span>
+                    <span className="text-[10px] text-[var(--color-text-muted)] capitalize mt-1">{user.role}</span>
+                    <span className="text-[11px] text-[var(--color-text-secondary)] mt-1">{user.email}</span>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsMobileOpen(false);
+                      }}
+                      className="mt-3 w-full py-2.5 rounded-lg text-xs font-semibold text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-all text-center"
+                    >
+                      Chiqish
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    <Link
+                      href="/login"
+                      className="w-full py-3 rounded-xl text-center text-sm font-medium border border-white/10 text-white hover:bg-white/5 transition-all"
+                      onClick={() => setIsMobileOpen(false)}
+                    >
+                      Kirish
+                    </Link>
+                    <Link
+                      href="/register"
+                      className="btn-primary w-full text-center text-sm py-3"
+                      onClick={() => setIsMobileOpen(false)}
+                    >
+                      Ro'yxatdan o'tish
+                    </Link>
+                  </div>
+                )}
+                
                 <a
                   href="https://t.me/agro_visionai_bot"
                   target="_blank"

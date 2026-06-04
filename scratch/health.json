@@ -1,0 +1,31 @@
+{
+  "status": "healthy",
+  "gemini_api_key_status": {
+    "env_exists": true,
+    "env_length": 53,
+    "env_prefix": "AQ.A",
+    "setting_exists": true,
+    "setting_length": 53,
+    "setting_prefix": "AQ.A"
+  },
+  "telegram_bot_status": {
+    "token_exists": true,
+    "token_length": 46,
+    "token_prefix": "873363207",
+    "process_running": false,
+    "process_pids": null,
+    "api_accessible": false,
+    "api_error": "<urlopen error _ssl.c:993: The handshake operation timed out>",
+    "google_accessible": true,
+    "google_error": null,
+    "proxy_org_accessible": false,
+    "proxy_org_error": "<urlopen error [Errno -2] Name or service not known>",
+    "proxy_uz_accessible": false,
+    "proxy_uz_error": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "logs": "\ud83c\udf3f Starting bot.py...\n2026-06-04 06:50:00,982 | INFO | agrovision_bot | \u2139\ufe0f Health-check server disabled (running in unified/HF mode)\n2026-06-04 06:50:00,982 | INFO | agrovision_bot | \ud83c\udf3f AgroVision AI Bot ishga tushmoqda...\n2026-06-04 06:50:01,152 | INFO | agrovision_bot | \u2705 Bot tayyor! Polling boshlanyapdi...\n"
+  },
+  "models": {
+    "yolov8": "loaded",
+    "efficientnet": "loaded"
+  }
+}

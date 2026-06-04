@@ -18,11 +18,17 @@ class ApiClient {
     options: RequestInit = {}
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
+    
+    // Sarlavhaga tokenni biriktiramiz (agar mavjud bo'lsa)
+    const token = typeof window !== "undefined" ? localStorage.getItem("agrovision_token") : null;
+    const headers = new Headers(options.headers || {});
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+
     const response = await fetch(url, {
       ...options,
-      headers: {
-        ...options.headers,
-      },
+      headers,
     });
 
     if (!response.ok) {
@@ -31,6 +37,27 @@ class ApiClient {
     }
 
     return response.json();
+  }
+
+  // Authentication
+  async registerUser(email: string, password: string, fullName: string) {
+    return this.request<any>("/api/v1/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password, full_name: fullName }),
+    });
+  }
+
+  async loginUser(email: string, password: string) {
+    return this.request<any>("/api/v1/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+  }
+
+  async getMe() {
+    return this.request<any>("/api/v1/auth/me");
   }
 
   // Plant Detection
