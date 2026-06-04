@@ -104,9 +104,9 @@ async def _call_gemini(prompt: str, image_bytes: bytes) -> Optional[str]:
 
 # ── PLANT DETECTION ─────────────────────────────────────────────────────────
 
-PLANT_PROMPT = """You are an expert agricultural botanist specializing in Central Asian and Uzbekistan plants.
+PLANT_PROMPT = """You are an expert botanist and agricultural scientist.
 
-Analyze this plant image carefully and identify the plant species.
+Analyze this image carefully and identify the plant species. This includes any crop, tree, fruit, flower, houseplant, weed, shrub, wild plant, seedling, or grass. You must identify any plant species with maximum accuracy, regardless of whether it is an agricultural crop or a wild plant.
 
 Return ONLY a valid JSON object (no extra text) in this exact format:
 {
@@ -114,7 +114,7 @@ Return ONLY a valid JSON object (no extra text) in this exact format:
   "scientific_name": "Genus species",
   "family": "Plant family name",
   "confidence": 0.92,
-  "description": "2-3 sentences about this plant, mentioning its importance in Uzbekistan or Central Asia if relevant.",
+  "description": "2-3 sentences about this plant, mentioning its characteristics, usage, or importance in Uzbekistan or Central Asia if relevant.",
   "growing_season": "Month — Month (e.g. April — October)",
   "water_needs": "Low / Moderate / High / Very High",
   "suitable_regions": ["Region1", "Region2"],
@@ -124,7 +124,7 @@ Return ONLY a valid JSON object (no extra text) in this exact format:
 
 For suitable_regions, choose from: Tashkent, Fergana, Andijan, Namangan, Samarkand, Bukhara, Kashkadarya, Surkhandarya, Jizzakh, Syrdarya, Khorezm, Karakalpakstan, Navoi.
 
-If the image does NOT contain a plant, return:
+If the image does NOT contain a plant or any plant parts (leaves, stems, flowers, fruits, roots), return:
 {"is_plant": false, "plant_name": "No plant detected", "confidence": 0.0, "supported_category": "Other"}
 
 confidence should reflect your actual certainty (0.0-1.0). Be precise and accurate.
