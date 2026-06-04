@@ -174,6 +174,7 @@ async def get_logs(page: int = 1, limit: int = 20):
                 "processing_time_ms": int(log.get("processing_time_ms", 300)),
                 "model_version": log.get("model_version", "Gemini"),
                 "created_at": log.get("created_at"),
+                "image_url": log.get("input_image_url"),
             })
 
         return AdminLogsResponse(success=True, data=formatted_logs, total=total, page=page)
@@ -212,3 +213,17 @@ async def get_users(page: int = 1, limit: int = 20):
     except Exception as e:
         logger.error(f"Error fetching live users: {e}")
         return get_mock_users(page, limit)
+
+
+@router.delete("/logs/{log_id}")
+async def delete_log(log_id: str):
+    """Delete an AI log from database."""
+    client = get_supabase()
+    if not client:
+        return {"success": False, "message": "Database not connected"}
+    try:
+        client.table("ai_logs").delete().eq("id", log_id).execute()
+        return {"success": True, "message": "Log deleted successfully"}
+    except Exception as e:
+        logger.error(f"Error deleting log: {e}")
+        return {"success": False, "message": str(e)}

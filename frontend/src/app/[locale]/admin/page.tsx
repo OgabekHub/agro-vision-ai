@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations, useLocale } from "next-intl";
 import { Shield, BarChart3, Image, Users, FileText, Activity, Leaf, Bug, Mountain, Eye, Trash2, Search } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
 import { api } from "@/lib/api";
@@ -29,12 +29,35 @@ const typeColors = { plant: "#00FF88", disease: "#F59E0B", land: "#3B82F6" };
 
 export default function AdminPage() {
   const t = useTranslations("admin");
+  const tc = useTranslations("common");
+  const locale = useLocale();
   const [activeTab, setActiveTab] = useState<Tab>("overview");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedLog, setSelectedLog] = useState<any>(null);
+
+  const deleteBtnText = {
+    uz: "O'chirish",
+    en: "Delete",
+    ru: "Удалить"
+  }[locale as "uz" | "ru" | "en"] || "O'chirish";
 
   const [stats, setStats] = useState<any>(null);
   const [logsList, setLogsList] = useState<any[]>([]);
   const [usersList, setUsersList] = useState<any[]>([]);
+
+  const handleDeleteLog = async (logId: string) => {
+    if (!confirm("Haqiqatan ham ushbu jurnalni o'chirmoqchimisiz?")) return;
+    try {
+      const res = await api.deleteAdminLog(logId);
+      if (res.success) {
+        setLogsList((prev) => prev.filter((l) => l.id !== logId));
+      } else {
+        alert(res.message || "O'chirishda xatolik yuz berdi");
+      }
+    } catch (err) {
+      console.error("Failed to delete log:", err);
+    }
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -213,7 +236,24 @@ export default function AdminPage() {
                           <td className="py-3 px-2 text-[var(--color-text-muted)]">{model}</td>
                           <td className="py-3 px-2 text-[var(--color-text-muted)]">{time}</td>
                           <td className="py-3 px-2 text-[var(--color-text-muted)]">{processing}ms</td>
-                          <td className="py-3 px-2 text-right"><div className="flex items-center justify-end gap-1"><button className="p-1.5 rounded-lg hover:bg-white/5"><Eye className="w-3.5 h-3.5" /></button><button className="p-1.5 rounded-lg hover:bg-white/5 text-[var(--color-accent-red)]"><Trash2 className="w-3.5 h-3.5" /></button></div></td>
+                          <td className="py-3 px-2 text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <button 
+                                onClick={() => setSelectedLog(log)} 
+                                className="p-1.5 rounded-lg hover:bg-white/5"
+                                title="Batafsil"
+                              >
+                                <Eye className="w-3.5 h-3.5" />
+                              </button>
+                              <button 
+                                onClick={() => handleDeleteLog(log.id)} 
+                                className="p-1.5 rounded-lg hover:bg-white/5 text-[var(--color-accent-red)]"
+                                title="O'chirish"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
                         </tr>
                       );
                     })}
@@ -236,9 +276,26 @@ export default function AdminPage() {
                   const logColor = typeColors[logType as "plant" | "disease" | "land"] || "#00FF88";
                   const time = log.time || (log.created_at ? new Date(log.created_at).toLocaleDateString() : "Just now");
                   return (
-                    <motion.div key={log.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }} className="group relative aspect-square rounded-xl bg-gradient-to-br from-white/5 to-white/2 border border-white/5 overflow-hidden hover:border-[var(--color-border-glow)] transition-all cursor-pointer">
-                      <div className="absolute inset-0 flex items-center justify-center"><Icon className="w-10 h-10 opacity-20" style={{ color: logColor }} /></div>
-                      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent">
+                    <motion.div 
+                      key={log.id} 
+                      initial={{ opacity: 0, scale: 0.9 }} 
+                      animate={{ opacity: 1, scale: 1 }} 
+                      transition={{ delay: i * 0.05 }} 
+                      onClick={() => setSelectedLog(log)}
+                      className="group relative aspect-square rounded-xl bg-gradient-to-br from-white/5 to-white/2 border border-white/5 overflow-hidden hover:border-[var(--color-border-glow)] transition-all cursor-pointer"
+                    >
+                      {log.image_url || log.input_image_url ? (
+                        <img 
+                          src={log.image_url || log.input_image_url} 
+                          alt={log.result} 
+                          className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-85 transition-opacity" 
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Icon className="w-10 h-10 opacity-20" style={{ color: logColor }} />
+                        </div>
+                      )}
+                      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent z-10">
                         <p className="text-xs font-medium truncate">{log.result}</p>
                         <p className="text-[10px] text-[var(--color-text-muted)]">{time}</p>
                       </div>
@@ -290,6 +347,81 @@ export default function AdminPage() {
           </motion.div>
         )}
       </div>
+
+      {/* Detail Modal */}
+      <AnimatePresence>
+        {selectedLog && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="relative w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-[var(--color-bg-dark)]/90 p-6 shadow-2xl backdrop-blur-xl"
+            >
+              <h3 className="text-lg font-bold mb-4 font-[family-name:var(--font-display)]">
+                {selectedLog.analysis_type === "plant" || selectedLog.type === "plant" 
+                  ? "O'simlik tahlili" 
+                  : selectedLog.analysis_type === "disease" || selectedLog.type === "disease" 
+                  ? "Kasallik tahlili" 
+                  : "Tuproq tahlili"} jurnali
+              </h3>
+              
+              {/* Image Preview */}
+              <div className="relative aspect-video w-full rounded-xl bg-white/5 border border-white/5 overflow-hidden mb-4">
+                {selectedLog.image_url || selectedLog.input_image_url ? (
+                  <img
+                    src={selectedLog.image_url || selectedLog.input_image_url}
+                    alt={selectedLog.result}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full text-[var(--color-text-muted)] gap-2">
+                    <Image className="w-10 h-10 opacity-30" />
+                    <span className="text-xs">Rasm mavjud emas</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Data Table */}
+              <div className="space-y-3 mb-6">
+                {[
+                  { label: t("columns.type"), value: selectedLog.analysis_type || selectedLog.type || "plant" },
+                  { label: t("columns.result"), value: selectedLog.result },
+                  { label: t("columns.confidence"), value: `${((selectedLog.confidence || 0) * 100).toFixed(1)}%` },
+                  { label: t("columns.model"), value: selectedLog.model_version || selectedLog.model || "YOLOv8" },
+                  { label: t("columns.time"), value: selectedLog.created_at ? new Date(selectedLog.created_at).toLocaleString() : (selectedLog.time || "Just now") },
+                  { label: t("columns.speed"), value: `${selectedLog.processing_time_ms || selectedLog.processing || 250}ms` },
+                ].map((item) => (
+                  <div key={item.label} className="flex justify-between py-1.5 border-b border-white/5 text-sm">
+                    <span className="text-[var(--color-text-secondary)]">{item.label}</span>
+                    <span className="font-medium text-right capitalize">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => {
+                    handleDeleteLog(selectedLog.id);
+                    setSelectedLog(null);
+                  }}
+                  className="px-4 py-2 rounded-xl text-sm font-medium border border-[var(--color-accent-red)]/20 bg-[var(--color-accent-red)]/10 text-[var(--color-accent-red)] hover:bg-[var(--color-accent-red)]/20 transition-all flex items-center gap-1.5"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  {deleteBtnText}
+                </button>
+                <button
+                  onClick={() => setSelectedLog(null)}
+                  className="px-4 py-2 rounded-xl text-sm font-medium bg-white/5 border border-white/10 text-[var(--color-text-secondary)] hover:bg-white/10 hover:text-white transition-all"
+                >
+                  {tc("close")}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

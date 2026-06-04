@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/routing";
@@ -31,6 +31,36 @@ const recentAnalyses = [
   { type: "land" as const, result: "Loam Soil", confidence: 0.891, time: "3 hours ago" },
 ];
 
+function formatRelativeTime(dateString: string, locale: string): string {
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (locale === "uz") {
+      if (diffMins < 1) return "Hozirgina";
+      if (diffMins < 60) return `${diffMins} daqiqa oldin`;
+      if (diffHours < 24) return `${diffHours} soat oldin`;
+      return `${diffDays} kun oldin`;
+    } else if (locale === "ru") {
+      if (diffMins < 1) return "Только что";
+      if (diffMins < 60) return `${diffMins} мин. назад`;
+      if (diffHours < 24) return `${diffHours} ч. назад`;
+      return `${diffDays} дн. назад`;
+    } else {
+      if (diffMins < 1) return "Just now";
+      if (diffMins < 60) return `${diffMins} min ago`;
+      if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+      return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+    }
+  } catch (e) {
+    return "Just now";
+  }
+}
+
 export default function DashboardPage() {
   const t = useTranslations("dashboard");
   const ta = useTranslations("analysis.processing");
@@ -39,6 +69,22 @@ export default function DashboardPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [status, setStatus] = useState<AnalysisStatus>("idle");
   const [result, setResult] = useState<PlantDetectionResult | null>(null);
+  const [recentLogs, setRecentLogs] = useState<any[]>([]);
+
+  const loadRecentLogs = async () => {
+    try {
+      const res = await api.getAdminLogs(1, 4);
+      if (res?.success && res.data) {
+        setRecentLogs(res.data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch recent logs:", err);
+    }
+  };
+
+  useEffect(() => {
+    loadRecentLogs();
+  }, []);
 
   const analysisCards = [
     { title: t("analysisTypes.plant"), desc: t("plantDetection.dropSublabel"), icon: Leaf, color: "#00FF88", href: "/dashboard" as const, active: true },
@@ -57,6 +103,7 @@ export default function DashboardPage() {
       if (res.success && res.data) {
         setResult({ ...res.data, image_url: URL.createObjectURL(selectedFile) });
         setStatus("complete");
+        loadRecentLogs();
       } else {
         throw new Error("API unsuccessfull");
       }
@@ -178,17 +225,22 @@ export default function DashboardPage() {
                   <h3 className="font-semibold text-sm">{t("recentAnalyses")}</h3>
                 </div>
                 <div className="space-y-3">
-                  {recentAnalyses.map((item, i) => (
-                    <motion.div key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 + i * 0.1 }} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
-                      <div>
-                        <p className="text-sm font-medium">{item.result}</p>
-                        <p className="text-xs text-[var(--color-text-muted)]">{t(`analysisTypes.${item.type}`)} • {item.time}</p>
-                      </div>
-                      <span className="text-xs font-bold" style={{ color: item.confidence > 0.9 ? "var(--color-primary)" : "var(--color-accent-yellow)" }}>
-                        {(item.confidence * 100).toFixed(0)}%
-                      </span>
-                    </motion.div>
-                  ))}
+                  {(recentLogs.length > 0 ? recentLogs : recentAnalyses).map((item, i) => {
+                    const type = item.type || item.analysis_type || "plant";
+                    const confidenceVal = item.confidence || 0.90;
+                    const timeStr = item.time || (item.created_at ? formatRelativeTime(item.created_at, locale) : "Just now");
+                    return (
+                      <motion.div key={item.id || i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 + i * 0.1 }} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+                        <div>
+                          <p className="text-sm font-medium truncate max-w-[150px]" title={item.result}>{item.result}</p>
+                          <p className="text-xs text-[var(--color-text-muted)]">{t(`analysisTypes.${type}`)} • {timeStr}</p>
+                        </div>
+                        <span className="text-xs font-bold" style={{ color: confidenceVal > 0.9 ? "var(--color-primary)" : "var(--color-accent-yellow)" }}>
+                          {(confidenceVal * 100).toFixed(0)}%
+                        </span>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </GlassCard>
             </motion.div>

@@ -91,6 +91,12 @@ class ApiClient {
     return this.request<any>(`/api/v1/admin/logs?page=${page}&limit=${limit}`);
   }
 
+  async deleteAdminLog(logId: string) {
+    return this.request<any>(`/api/v1/admin/logs/${logId}`, {
+      method: "DELETE",
+    });
+  }
+
   async getAdminStats() {
     return this.request<any>("/api/v1/admin/stats");
   }
