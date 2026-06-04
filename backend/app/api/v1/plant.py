@@ -63,33 +63,57 @@ async def detect_plant(
         result = local_model_service.predict(contents, filter_category=filter_cat)
         
         if result:
-            # Agar Gemini ishlamagan bo'lsa yoki Gemini o'simlikni topolmagan bo'lsa-yu lekin lokal model yuqori ishonch (confidence > 0.6) bilan topsa
+            # Case 1: Gemini ishlamadi (mock) yoki o'simlik toifasini aniqlay olmadi
             if is_gemini_mock or (category == "Other" and result["confidence"] > 0.6):
-                model_used = "local_offline_model"
-                plant_data = {
-                    "plant_name": result["plant_name"],
-                    "scientific_name": result["raw_class"].split("__")[0] if "__" in result["raw_class"] else result["plant_name"],
-                    "family": "Noma'lum",
-                    "confidence": result["confidence"],
-                    "description": f"Oflayn AI tahlili: Bu {result['plant_name']} o'simligi. {result['description']}",
-                    "growing_season": "Noma'lum",
-                    "water_needs": "Mo'tadil",
-                    "suitable_regions": ["Tashkent", "Fergana", "Samarkand"],
-                    "is_plant": True,
-                    "disease_detected": result["disease_name"],
-                    "local_confidence": result["confidence"],
-                    "top3_predictions": result.get("top3", []),
-                }
+                if result["confidence"] < 0.40:
+                    model_used = "local_offline_model"
+                    plant_data = {
+                        "plant_name": "O'simlik aniqlanmadi (kam ishonchlilik)",
+                        "scientific_name": "Unknown",
+                        "family": "Noma'lum",
+                        "confidence": result["confidence"],
+                        "description": "Rasm sifati past yoki o'simlik aniq ko'rinmayapti. Iltimos, o'simlikni yaqinroqdan va yorug'roq joyda rasmga oling.",
+                        "growing_season": "Noma'lum",
+                        "water_needs": "Noma'lum",
+                        "suitable_regions": [],
+                        "is_plant": False,
+                        "disease_detected": "Noma'lum",
+                        "local_confidence": result["confidence"],
+                        "top3_predictions": result.get("top3", []),
+                    }
+                else:
+                    model_used = "local_offline_model"
+                    plant_data = {
+                        "plant_name": result["plant_name"],
+                        "scientific_name": result["raw_class"].split("__")[0] if "__" in result["raw_class"] else result["plant_name"],
+                        "family": "Noma'lum",
+                        "confidence": result["confidence"],
+                        "description": f"Oflayn AI tahlili: Bu {result['plant_name']} o'simligi. {result['description']}",
+                        "growing_season": "Noma'lum",
+                        "water_needs": "Mo'tadil",
+                        "suitable_regions": ["Tashkent", "Fergana", "Samarkand"],
+                        "is_plant": True,
+                        "disease_detected": result["disease_name"],
+                        "local_confidence": result["confidence"],
+                        "top3_predictions": result.get("top3", []),
+                    }
+            # Case 2: Gemini muvaffaqiyatli ishladi (Hybrid rejim)
             else:
-                model_used = "gemini_and_local_hybrid"
-                plant_data["disease_detected"] = result["disease_name"]
-                plant_data["local_confidence"] = result["confidence"]
-                plant_data["top3_predictions"] = result.get("top3", [])
-                
-                # Agar kasallik topsa, ta'rifiga qo'shib qo'yamiz
-                if not result["is_healthy"]:
-                    disease_info = f"\n\n🩺 Diqqat: Ushbu o'simlikda kasallik aniqlandi: {result['disease_name']}."
-                    plant_data["description"] = plant_data.get("description", "") + disease_info
+                if result["confidence"] >= 0.70:
+                    model_used = "gemini_and_local_hybrid"
+                    plant_data["disease_detected"] = result["disease_name"]
+                    plant_data["local_confidence"] = result["confidence"]
+                    plant_data["top3_predictions"] = result.get("top3", [])
+                    
+                    # Agar kasallik topsa va u ishonchli bo'lsa, ta'rifga qo'shib qo'yamiz
+                    if not result["is_healthy"]:
+                        disease_info = f"\n\n🩺 Diqqat: Ushbu o'simlikda kasallik aniqlandi: {result['disease_name']}."
+                        plant_data["description"] = plant_data.get("description", "") + disease_info
+                else:
+                    # Mahalliy model ishonchi past bo'lsa, kasallik haqida asossiz taxmin qo'shmaymiz
+                    model_used = "gemini_vision"
+                    plant_data["top3_predictions"] = result.get("top3", [])
+                    plant_data["local_confidence"] = result["confidence"]
 
     processing_time = int((time.time() - start_time) * 1000)
 
