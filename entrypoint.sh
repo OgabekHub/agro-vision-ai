@@ -8,7 +8,7 @@ echo "Python version: $(python --version)"
 echo "🤖 Starting Telegram Bot with auto-restart..."
 while true; do
     echo "🌿 Starting bot.py..." >> /code/bot.log
-    python /code/telegram_bot/bot.py >> /code/bot.log 2>&1
+    DISABLE_HEALTH_CHECK=true python /code/telegram_bot/bot.py >> /code/bot.log 2>&1
     echo "⚠️ Bot exited. Restarting in 5 seconds..." >> /code/bot.log
     sleep 5
 done &

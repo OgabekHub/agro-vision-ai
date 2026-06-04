@@ -77,9 +77,12 @@ def main() -> None:
         logger.error("❌ TELEGRAM_BOT_TOKEN topilmadi! .env faylini tekshiring.")
         sys.exit(1)
 
-    # Health-check serverni orqa fonda ishga tushirish (Render shart qiladi)
-    health_thread = threading.Thread(target=run_health_server, daemon=True)
-    health_thread.start()
+    # Health-check serverni orqa fonda ishga tushirish (Render shart qiladi, HF da esa o'chiriladi)
+    if os.getenv("DISABLE_HEALTH_CHECK") != "true":
+        health_thread = threading.Thread(target=run_health_server, daemon=True)
+        health_thread.start()
+    else:
+        logger.info("ℹ️ Health-check server disabled (running in unified/HF mode)")
 
     logger.info("🌿 AgroVision AI Bot ishga tushmoqda...")
 
