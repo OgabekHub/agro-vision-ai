@@ -74,6 +74,27 @@ def get_mock_users(page: int, limit: int) -> AdminUsersResponse:
     return AdminUsersResponse(success=True, data=users, total=len(users))
 
 
+@router.get("/debug-db")
+async def debug_db():
+    from app.core.config import settings
+    from app.core.supabase_service import get_supabase
+    url = settings.SUPABASE_URL
+    key = settings.SUPABASE_KEY
+    client = get_supabase()
+    
+    return {
+        "url_empty": not url,
+        "url_length": len(url) if url else 0,
+        "url_prefix": url[:15] if url else None,
+        "url_suffix": url[-5:] if url else None,
+        "key_empty": not key,
+        "key_length": len(key) if key else 0,
+        "key_prefix": key[:10] if key else None,
+        "key_suffix": key[-5:] if key else None,
+        "client_initialized": client is not None,
+    }
+
+
 @router.get("/stats", response_model=AdminStatsResponse)
 async def get_stats():
     """Get admin dashboard statistics from database."""
