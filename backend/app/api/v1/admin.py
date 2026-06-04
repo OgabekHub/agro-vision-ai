@@ -227,3 +227,19 @@ async def delete_log(log_id: str):
     except Exception as e:
         logger.error(f"Error deleting log: {e}")
         return {"success": False, "message": str(e)}
+
+
+@router.get("/bot-log")
+async def get_bot_log():
+    import os
+    log_path = "/code/bot.log"
+    if not os.path.exists(log_path):
+        log_path = "bot.log"
+    if not os.path.exists(log_path):
+        return {"success": False, "message": "Log file not found"}
+    try:
+        with open(log_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+            return {"success": True, "log": "".join(lines[-200:])}
+    except Exception as e:
+        return {"success": False, "message": str(e)}
