@@ -249,5 +249,36 @@
       "landAnalysis": "Анализ земли",
       "regionMap": "Карта регионов"
     }
+  },
+  "auth": {
+    "login": {
+      "title": "Вход в систему",
+      "subtitle": "Панель управления платформой и история анализов",
+      "emailLabel": "Электронная почта",
+      "emailPlaceholder": "name@example.com",
+      "passwordLabel": "Пароль",
+      "passwordPlaceholder": "••••••••",
+      "btnEnter": "Войти",
+      "btnLoading": "Вход...",
+      "errorMsg": "Не удалось войти. Пожалуйста, проверьте почту или пароль.",
+      "noAccount": "Нет аккаунта?",
+      "registerLink": "Зарегистрироваться"
+    },
+    "register": {
+      "title": "Регистрация",
+      "subtitle": "Создайте личный кабинет для полного доступа к платформе",
+      "fullNameLabel": "Полное имя (Ф.И.О.)",
+      "fullNamePlaceholder": "Шахзод Алимов",
+      "emailLabel": "Электронная почта",
+      "emailPlaceholder": "name@example.com",
+      "passwordLabel": "Пароль",
+      "passwordPlaceholder": "Минимум 6 символов",
+      "btnSubmit": "Зарегистрироваться",
+      "btnLoading": "Регистрация...",
+      "errorMsg": "Ошибка при регистрации. Пожалуйста, проверьте почту.",
+      "successMsg": "Аккаунт успешно создан! Письмо с подтверждением могло быть отправлено на вашу почту (или вы можете сразу войти).",
+      "hasAccount": "Уже есть аккаунт?",
+      "loginLink": "Войти"
+    }
   }
 }

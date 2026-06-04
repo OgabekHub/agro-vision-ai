@@ -6,10 +6,12 @@ import { Link, useRouter } from "@/i18n/routing";
 import { motion } from "framer-motion";
 import { UserPlus, Mail, Lock, User, ArrowRight, CheckCircle } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
+import { useTranslations } from "next-intl";
 
 export default function RegisterPage() {
   const { register, user } = useAuth();
   const router = useRouter();
+  const t = useTranslations("auth.register");
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -33,16 +35,14 @@ export default function RegisterPage() {
     try {
       const res = await register(email, password, fullName);
       if (res.success) {
-        setSuccessMsg(
-          "Akkaunt muvaffaqiyatli yaratildi! Emailingizga tasdiqlash xati yuborilgan bo'lishi mumkin (yoki to'g'ridan-to'g'ri login qilishingiz mumkin)."
-        );
+        setSuccessMsg(t("successMsg"));
         setTimeout(() => {
           router.push("/login");
         }, 3000);
       }
     } catch (err: any) {
       console.error(err);
-      setErrorMsg(err.message || "Ro'yxatdan o'tishda xato yuz berdi. Pochtani tekshiring.");
+      setErrorMsg(err.message || t("errorMsg"));
     } finally {
       setLoading(false);
     }
@@ -68,10 +68,10 @@ export default function RegisterPage() {
               <UserPlus className="w-6 h-6 text-[var(--color-bg-dark)]" />
             </div>
             <h2 className="text-2xl font-bold font-[family-name:var(--font-display)] text-white tracking-tight">
-              Ro'yxatdan o'tish
+              {t("title")}
             </h2>
             <p className="text-sm text-[var(--color-text-secondary)] mt-2">
-              Platformadan to'liq foydalanish va shaxsiy hisob yaratish
+              {t("subtitle")}
             </p>
           </div>
 
@@ -91,7 +91,7 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
-                Foydalanuvchi ismi (F.I.SH.)
+                {t("fullNameLabel")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/40">
@@ -100,7 +100,7 @@ export default function RegisterPage() {
                 <input
                   type="text"
                   required
-                  placeholder="Shaxzod Alimov"
+                  placeholder={t("fullNamePlaceholder")}
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   className="block w-full pl-10 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all"
@@ -110,7 +110,7 @@ export default function RegisterPage() {
 
             <div>
               <label className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
-                Elektron pochta
+                {t("emailLabel")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/40">
@@ -119,7 +119,7 @@ export default function RegisterPage() {
                 <input
                   type="email"
                   required
-                  placeholder="name@example.com"
+                  placeholder={t("emailPlaceholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="block w-full pl-10 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all"
@@ -129,7 +129,7 @@ export default function RegisterPage() {
 
             <div>
               <label className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
-                Parol
+                {t("passwordLabel")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/40">
@@ -138,7 +138,7 @@ export default function RegisterPage() {
                 <input
                   type="password"
                   required
-                  placeholder="Kamida 6 ta belgi"
+                  placeholder={t("passwordPlaceholder")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="block w-full pl-10 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all"
@@ -152,11 +152,11 @@ export default function RegisterPage() {
               className="w-full btn-primary py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 mt-2 shadow-[0_4px_20px_rgba(0,255,136,0.15)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
-                <span>Ro'yxatdan o'tilmoqda...</span>
+                <span>{t("btnLoading")}</span>
               ) : (
                 <>
                   <UserPlus className="w-4 h-4" />
-                  <span>Ro'yxatdan o'tish</span>
+                  <span>{t("btnSubmit")}</span>
                 </>
               )}
             </button>
@@ -164,12 +164,12 @@ export default function RegisterPage() {
 
           <div className="mt-8 pt-6 border-t border-white/5 text-center">
             <p className="text-xs text-[var(--color-text-secondary)]">
-              Akkauntingiz bormi?{" "}
+              {t("hasAccount")}{" "}
               <Link
                 href="/login"
                 className="text-[var(--color-primary)] hover:underline inline-flex items-center gap-0.5 font-medium ml-1"
               >
-                Kirish <ArrowRight className="w-3 h-3" />
+                {t("loginLink")} <ArrowRight className="w-3 h-3" />
               </Link>
             </p>
           </div>

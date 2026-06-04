@@ -249,5 +249,36 @@
       "landAnalysis": "Yer tahlili",
       "regionMap": "Viloyat xaritasi"
     }
+  },
+  "auth": {
+    "login": {
+      "title": "Tizimga kirish",
+      "subtitle": "Platforma boshqaruv paneli va tahlillar tarixi",
+      "emailLabel": "Elektron pochta",
+      "emailPlaceholder": "name@example.com",
+      "passwordLabel": "Parol",
+      "passwordPlaceholder": "••••••••",
+      "btnEnter": "Kirish",
+      "btnLoading": "Kirilmoqda...",
+      "errorMsg": "Tizimga kirishda xato yuz berdi. Pochtani yoki parolni tekshiring.",
+      "noAccount": "Akkauntingiz yo'qmi?",
+      "registerLink": "Ro'yxatdan o'tish"
+    },
+    "register": {
+      "title": "Ro'yxatdan o'tish",
+      "subtitle": "Platformadan to'liq foydalanish va shaxsiy hisob yaratish",
+      "fullNameLabel": "Foydalanuvchi ismi (F.I.SH.)",
+      "fullNamePlaceholder": "Shaxzod Alimov",
+      "emailLabel": "Elektron pochta",
+      "emailPlaceholder": "name@example.com",
+      "passwordLabel": "Parol",
+      "passwordPlaceholder": "Kamida 6 ta belgi",
+      "btnSubmit": "Ro'yxatdan o'tish",
+      "btnLoading": "Ro'yxatdan o'tilmoqda...",
+      "errorMsg": "Ro'yxatdan o'tishda xato yuz berdi. Pochtani tekshiring.",
+      "successMsg": "Akkaunt muvaffaqiyatli yaratildi! Emailingizga tasdiqlash xati yuborilgan bo'lishi mumkin (yoki to'g'ridan-to'g'ri login qilishingiz mumkin).",
+      "hasAccount": "Akkauntingiz bormi?",
+      "loginLink": "Kirish"
+    }
   }
 }

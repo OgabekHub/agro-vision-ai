@@ -249,5 +249,36 @@
       "landAnalysis": "Land Analysis",
       "regionMap": "Region Map"
     }
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "subtitle": "Platform management panel and analysis history",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "name@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "btnEnter": "Sign In",
+      "btnLoading": "Signing In...",
+      "errorMsg": "Failed to sign in. Please check your email or password.",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Sign Up"
+    },
+    "register": {
+      "title": "Sign Up",
+      "subtitle": "Create an account to access all features",
+      "fullNameLabel": "Full Name",
+      "fullNamePlaceholder": "John Doe",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "name@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Min 6 characters",
+      "btnSubmit": "Sign Up",
+      "btnLoading": "Registering...",
+      "errorMsg": "Registration failed. Please check your email.",
+      "successMsg": "Account successfully created! A confirmation email might have been sent (or you can log in directly).",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign In"
+    }
   }
 }
