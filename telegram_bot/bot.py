@@ -1,11 +1,16 @@
 """
 AgroVision AI — Telegram Bot
-Asosiy kirish nuqtasi
+Render.com Web Service uchun (bepul hosting):
+- Telegram bot polling orqa fonda ishlaydi
+- FastAPI health-check server old fonda ishlaydi (Render shart qo'yadi)
 """
 
 import os
 import sys
 import logging
+import asyncio
+import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
 
 # telegram_bot/ katalogini Python path ga qo'shamiz
 sys.path.insert(0, os.path.dirname(__file__))
@@ -33,6 +38,27 @@ logging.basicConfig(
 logger = logging.getLogger("agrovision_bot")
 
 
+# ── Health-check HTTP server ───────────────────────────────────────────────────
+class HealthHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"AgroVision Bot is running!")
+
+    def log_message(self, format, *args):
+        pass  # HTTP loglarini o'chirish
+
+
+def run_health_server():
+    port = int(os.getenv("PORT", "10000"))
+    server = HTTPServer(("0.0.0.0", port), HealthHandler)
+    logger.info(f"✅ Health server started on port {port}")
+    server.serve_forever()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+
+
 async def post_init(application: Application) -> None:
     """Bot komandalarini Telegram da ro'yxatga olish."""
     commands = [
@@ -51,9 +77,12 @@ def main() -> None:
         logger.error("❌ TELEGRAM_BOT_TOKEN topilmadi! .env faylini tekshiring.")
         sys.exit(1)
 
+    # Health-check serverni orqa fonda ishga tushirish (Render shart qiladi)
+    health_thread = threading.Thread(target=run_health_server, daemon=True)
+    health_thread.start()
+
     logger.info("🌿 AgroVision AI Bot ishga tushmoqda...")
 
-    # Set up longer connection timeouts to prevent transient network handshake timeouts on HF Spaces
     from telegram.request import HTTPXRequest
     request_config = HTTPXRequest(
         connect_timeout=60.0,
@@ -69,15 +98,13 @@ def main() -> None:
         .post_init(post_init)
     )
 
-    # Allow custom API URL if HuggingFace/Telegram blocks connections
+    # Custom API URL qo'llab-quvvatlash
     api_url = os.getenv("TELEGRAM_API_URL")
     if api_url:
-        logger.info(f"⚙️ Using custom TELEGRAM_API_URL: {api_url}")
         builder = builder.base_url(api_url)
-        
+
     api_file_url = os.getenv("TELEGRAM_API_FILE_URL")
     if api_file_url:
-        logger.info(f"⚙️ Using custom TELEGRAM_API_FILE_URL: {api_file_url}")
         builder = builder.base_file_url(api_file_url)
 
     app = builder.build()
@@ -87,25 +114,16 @@ def main() -> None:
     app.add_handler(CommandHandler("help", help_handler))
     app.add_handler(CommandHandler("language", language_handler))
     app.add_handler(CommandHandler("about", about_handler))
-
-    # Rasm handleri
     app.add_handler(MessageHandler(filters.PHOTO, photo_handler))
-
-    # Inline keyboard callbacklar
     app.add_handler(CallbackQueryHandler(callback_handler))
-
-    # Boshqa matnlarga javob
     app.add_handler(
-        MessageHandler(
-            filters.TEXT & ~filters.COMMAND,
-            _text_fallback,
-        )
+        MessageHandler(filters.TEXT & ~filters.COMMAND, _text_fallback)
     )
 
     # ── Global xato handleri ───────────────────────────────────────────────
     app.add_error_handler(_error_handler)
 
-    logger.info("✅ Bot tayyor! Polling boshlanyapti...")
+    logger.info("✅ Bot tayyor! Polling boshlanyapdi...")
     app.run_polling(
         allowed_updates=Update.ALL_TYPES,
         drop_pending_updates=True,
@@ -134,7 +152,7 @@ async def _error_handler(update: object, context) -> None:
     from telegram.error import TimedOut, NetworkError, BadRequest
     error = context.error
     if isinstance(error, TimedOut):
-        logger.warning("⚠️ Telegram API timeout — HF Spaces tarmoq kechikishi. Davom etilmoqda...")
+        logger.warning("⚠️ Telegram API timeout. Davom etilmoqda...")
         return
     if isinstance(error, NetworkError):
         logger.warning(f"⚠️ Tarmoq xatosi: {error}. Davom etilmoqda...")
