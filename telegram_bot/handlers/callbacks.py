@@ -15,11 +15,9 @@ from services.ai_service import AgroVisionAIService
 from services.formatter import format_plant_result, format_disease_result
 from services.keyboards import main_keyboard, result_keyboard
 
-port = os.getenv("PORT")
-if port:
-    API_BASE_URL = f"http://localhost:{port}"
-else:
-    API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
+# API_BASE_URL — HF Spaces backend manzili
+# PORT o'zgaruvchisiga qaramaymiz (Render uni health server uchun o'rnatadi)
+API_BASE_URL = os.getenv("API_BASE_URL", "https://ogabekolimjonov-agro-vision-ai.hf.space")
 
 WEB_APP_URL = os.getenv("WEB_APP_URL", "https://agro-vision-ai-zeta.vercel.app/")
 
