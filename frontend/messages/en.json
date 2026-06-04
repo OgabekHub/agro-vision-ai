@@ -6,7 +6,10 @@
     "landAnalysis": "Land Analysis",
     "regions": "Regions",
     "admin": "Admin",
-    "startAnalysis": "Start Analysis"
+    "startAnalysis": "Start Analysis",
+    "login": "Sign In",
+    "register": "Sign Up",
+    "logout": "Sign Out"
   },
   "landing": {
     "badge": "Powered by",

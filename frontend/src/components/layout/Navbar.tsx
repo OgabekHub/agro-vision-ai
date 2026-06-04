@@ -146,7 +146,7 @@ export default function Navbar() {
                     onClick={logout}
                     className="px-3 py-1.5 rounded-lg text-xs font-semibold text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-all"
                   >
-                    Chiqish
+                    {t("logout")}
                   </button>
                 </div>
               ) : (
@@ -155,14 +155,14 @@ export default function Navbar() {
                     href="/login"
                     className="px-3 py-2 rounded-lg text-xs font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-white/5 transition-all"
                   >
-                    Kirish
+                    {t("login")}
                   </Link>
                   <Link
                     href="/register"
                     className="btn-primary text-xs py-2 px-3 whitespace-nowrap xl:text-sm xl:py-2.5 xl:px-4"
                   >
                     <Zap className="w-4 h-4 flex-shrink-0" />
-                    <span>Ro'yxatdan o'tish</span>
+                    <span>{t("register")}</span>
                   </Link>
                 </div>
               )}
@@ -241,7 +241,7 @@ export default function Navbar() {
                       }}
                       className="mt-3 w-full py-2.5 rounded-lg text-xs font-semibold text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-all text-center"
                     >
-                      Chiqish
+                      {t("logout")}
                     </button>
                   </div>
                 ) : (
@@ -251,14 +251,14 @@ export default function Navbar() {
                       className="w-full py-3 rounded-xl text-center text-sm font-medium border border-white/10 text-white hover:bg-white/5 transition-all"
                       onClick={() => setIsMobileOpen(false)}
                     >
-                      Kirish
+                      {t("login")}
                     </Link>
                     <Link
                       href="/register"
                       className="btn-primary w-full text-center text-sm py-3"
                       onClick={() => setIsMobileOpen(false)}
                     >
-                      Ro'yxatdan o'tish
+                      {t("register")}
                     </Link>
                   </div>
                 )}

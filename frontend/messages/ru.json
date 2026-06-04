@@ -6,7 +6,10 @@
     "landAnalysis": "Анализ земли",
     "regions": "Регионы",
     "admin": "Админ",
-    "startAnalysis": "Начать"
+    "startAnalysis": "Начать",
+    "login": "Вход",
+    "register": "Регистрация",
+    "logout": "Выход"
   },
   "landing": {
     "badge": "Работает на",

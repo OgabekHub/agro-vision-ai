@@ -6,7 +6,10 @@
     "landAnalysis": "Yer tahlili",
     "regions": "Viloyatlar",
     "admin": "Admin",
-    "startAnalysis": "Boshlash"
+    "startAnalysis": "Boshlash",
+    "login": "Kirish",
+    "register": "Ro'yxatdan o'tish",
+    "logout": "Chiqish"
   },
   "landing": {
     "badge": "Asosida",
