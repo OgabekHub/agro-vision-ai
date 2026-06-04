@@ -60,7 +60,6 @@ def main() -> None:
         read_timeout=60.0,
         write_timeout=60.0,
         pool_timeout=60.0,
-        http_version="1.1",
     )
 
     builder = (
@@ -68,7 +67,6 @@ def main() -> None:
         .token(token)
         .request(request_config)
         .post_init(post_init)
-        .concurrent_updates(True)
     )
 
     # Allow custom API URL if HuggingFace/Telegram blocks connections
@@ -111,7 +109,7 @@ def main() -> None:
     app.run_polling(
         allowed_updates=Update.ALL_TYPES,
         drop_pending_updates=True,
-        poll_interval=2.0,
+        bootstrap_retries=-1,
     )
 
 
