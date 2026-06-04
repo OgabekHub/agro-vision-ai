@@ -144,6 +144,34 @@ def create_app() -> FastAPI:
             },
         }
 
+    @app.get("/test-gemini-key", tags=["Debug"])
+    async def test_gemini_key():
+        import httpx
+        key = settings.GEMINI_API_KEY
+        if not key:
+            return {"status": "error", "message": "GEMINI_API_KEY setting is empty"}
+            
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
+        payload = {
+            "contents": [{"parts": [{"text": "Say test"}]}]
+        }
+        
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                resp = await client.post(url, json=payload)
+                return {
+                    "status": "completed",
+                    "http_status": resp.status_code,
+                    "response_text": resp.text[:1000],
+                    "headers": dict(resp.headers),
+                }
+        except Exception as e:
+            return {
+                "status": "exception",
+                "error_type": type(e).__name__,
+                "error_msg": str(e),
+            }
+
     return app
 
 
