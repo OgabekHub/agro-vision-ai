@@ -11,11 +11,7 @@ _client: Optional[Client] = None
 
 
 def get_supabase() -> Optional[Client]:
-    """Initialize and return Supabase client if configured."""
-    global _client
-    if _client is not None:
-        return _client
-
+    """Initialize and return a fresh Supabase client instance."""
     url = settings.SUPABASE_URL
     key = settings.SUPABASE_KEY
 
@@ -24,9 +20,8 @@ def get_supabase() -> Optional[Client]:
         return None
 
     try:
-        _client = create_client(url, key)
-        logger.info("✅ Supabase client initialized successfully")
-        return _client
+        client = create_client(url, key)
+        return client
     except Exception as e:
         logger.error(f"Failed to initialize Supabase client: {e}")
         return None

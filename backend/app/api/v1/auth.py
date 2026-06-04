@@ -67,14 +67,17 @@ async def register(req: RegisterRequest):
         # 2. Assign role: 'admin' if email is olimjonov.ogabek.dev@gmail.com, else 'user'
         role = "admin" if email == "olimjonov.ogabek.dev@gmail.com" else "user"
 
-        # 3. Create profile in public users table
+        # 3. Create profile in public users table using clean service_role client
         profile = {
             "id": user_id,
             "email": email,
             "full_name": full_name,
             "role": role,
         }
-        client.table("users").insert(profile).execute()
+        db_client = get_supabase()
+        if not db_client:
+            raise Exception("Ma'lumotlar bazasi bilan bog'lanib bo'lmadi")
+        db_client.table("users").insert(profile).execute()
 
         logger.info(f"✅ Yangi foydalanuvchi ro'yxatdan o'tdi: {email} (Rol: {role})")
         return {
@@ -117,8 +120,12 @@ async def login(req: LoginRequest):
                 detail="Elektron pochta yoki parol xato",
             )
 
-        # Get profile from public users table to retrieve role
-        user_profile = client.table("users").select("*").eq("id", res.user.id).execute().data
+        # Get profile from public users table to retrieve role using clean service_role client
+        db_client = get_supabase()
+        if not db_client:
+            raise Exception("Ma'lumotlar bazasi bilan bog'lanib bo'lmadi")
+            
+        user_profile = db_client.table("users").select("*").eq("id", res.user.id).execute().data
         role = "user"
         full_name = "Foydalanuvchi"
 
@@ -134,7 +141,7 @@ async def login(req: LoginRequest):
                 "full_name": full_name,
                 "role": role,
             }
-            client.table("users").insert(profile).execute()
+            db_client.table("users").insert(profile).execute()
 
         logger.info(f"🔑 Foydalanuvchi tizimga kirdi: {email} (Rol: {role})")
         return {
