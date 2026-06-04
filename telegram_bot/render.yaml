@@ -1,0 +1,16 @@
+services:
+  - type: worker
+    name: agrovision-telegram-bot
+    runtime: python
+    rootDir: telegram_bot
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: API_BASE_URL
+        value: https://ogabekolimjonov-agro-vision-ai.hf.space
+      - key: WEB_APP_URL
+        value: https://agro-vision-ai-zeta.vercel.app/
+      - key: BOT_USERNAME
+        value: agro_visionai_bot
