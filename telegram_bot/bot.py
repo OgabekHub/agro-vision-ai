@@ -53,15 +53,22 @@ def main() -> None:
 
     logger.info("🌿 AgroVision AI Bot ishga tushmoqda...")
 
-    # Set up longer connection timeouts to prevent transient network handshake timeouts
+    # Set up longer connection timeouts to prevent transient network handshake timeouts on HF Spaces
     from telegram.request import HTTPXRequest
-    request_config = HTTPXRequest(connect_timeout=20.0, read_timeout=20.0)
+    request_config = HTTPXRequest(
+        connect_timeout=60.0,
+        read_timeout=60.0,
+        write_timeout=60.0,
+        pool_timeout=60.0,
+        http_version="1.1",
+    )
 
     builder = (
         Application.builder()
         .token(token)
         .request(request_config)
         .post_init(post_init)
+        .concurrent_updates(True)
     )
 
     # Allow custom API URL if HuggingFace/Telegram blocks connections
@@ -97,10 +104,14 @@ def main() -> None:
         )
     )
 
+    # ── Global xato handleri ───────────────────────────────────────────────
+    app.add_error_handler(_error_handler)
+
     logger.info("✅ Bot tayyor! Polling boshlanyapti...")
     app.run_polling(
         allowed_updates=Update.ALL_TYPES,
         drop_pending_updates=True,
+        poll_interval=2.0,
     )
 
 
@@ -118,6 +129,22 @@ async def _text_fallback(update, context) -> None:
         parse_mode=ParseMode.MARKDOWN,
         reply_markup=main_keyboard(lang, web_url),
     )
+
+
+async def _error_handler(update: object, context) -> None:
+    """Global xato handleri — tarmoq xatoliklarini tinchgina logga yozadi."""
+    from telegram.error import TimedOut, NetworkError, BadRequest
+    error = context.error
+    if isinstance(error, TimedOut):
+        logger.warning("⚠️ Telegram API timeout — HF Spaces tarmoq kechikishi. Davom etilmoqda...")
+        return
+    if isinstance(error, NetworkError):
+        logger.warning(f"⚠️ Tarmoq xatosi: {error}. Davom etilmoqda...")
+        return
+    if isinstance(error, BadRequest):
+        logger.warning(f"⚠️ Bad Request: {error}")
+        return
+    logger.error(f"❌ Kutilmagan xato: {error}", exc_info=error)
 
 
 if __name__ == "__main__":
