@@ -1,6 +1,7 @@
 // ===========================
 // AgroVision AI — API Client
 // ===========================
+// Trigger Vercel redeploy
 
 const API_BASE = typeof window !== "undefined"
   ? "" // relative URL in browser to trigger next.config.ts rewrites
