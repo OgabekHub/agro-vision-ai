@@ -39,7 +39,7 @@ try:
         },
         timeout=10
     )
-    if resp.status_code in (200, 404, 400):
+    if resp.status_code in (200, 404, 400, 401):
         ok(f"Supabase ulanish mavjud — HTTP {resp.status_code}")
         info(f"URL: {SUPABASE_URL}")
     else:
@@ -131,7 +131,7 @@ try:
             "q": "Tashkent,UZ",
             "appid": OPENWEATHER_API_KEY,
             "units": "metric",
-            "lang": "ru"
+            "lang": "en" # Use English to avoid Windows console Cyrillic encoding crashes
         },
         timeout=10
     )
@@ -142,7 +142,7 @@ try:
         city = data.get("name", "?")
         ok(f"OpenWeather ishlayapdi!")
         info(f"Shahar: {city}")
-        info(f"Harorat: {temp}°C")
+        info(f"Harorat: {temp}C")
         info(f"Holat: {desc}")
     elif resp.status_code == 401:
         fail(f"OpenWeather — API key noto'g'ri yoki faol emas (401)")

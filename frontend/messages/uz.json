@@ -205,7 +205,7 @@
     "plant": {
       "confidence": "Ishonchlilik",
       "growingSeason": "O'sish mavsumi",
-      "waterNeeds": "Suv ehtiyoji",
+      "waterNeeds": "Suvga bo'lgan ehtiyoj",
       "suitableRegions": "O'zbekistondagi mos mintaqalar",
       "family": "Oila"
     }

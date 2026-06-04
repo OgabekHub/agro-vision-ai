@@ -55,6 +55,11 @@ class ApiClient {
     });
   }
 
+  // Get Recent Diseases
+  async getRecentDiseases(limit = 5) {
+    return this.request<any[]>(`/api/v1/disease/recent?limit=${limit}`);
+  }
+
   // Land/Crop Recommendation
   async analyzeLand(imageFile: File, language: string = "uz", region?: string) {
     const formData = new FormData();

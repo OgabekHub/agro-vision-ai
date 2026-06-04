@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import { Bug, Sparkles, ArrowRight, ShieldAlert, History } from "lucide-react";
@@ -39,12 +39,20 @@ const mockDiseaseResult: DiseaseDetectionResult = {
   image_url: "",
 };
 
-const recentDiseases = [
-  { name: "Powdery Mildew", plant: "Grape", severity: "medium", time: "1h ago" },
-  { name: "Cotton Leaf Curl", plant: "Cotton", severity: "critical", time: "3h ago" },
-  { name: "Rust Disease", plant: "Wheat", severity: "low", time: "5h ago" },
-];
 const sevColors: Record<string, string> = { low: "#00FF88", medium: "#F59E0B", high: "#EF4444", critical: "#DC2626" };
+
+const emptyLabels = {
+  uz: "Tahlillar hali mavjud emas",
+  ru: "Анализы пока отсутствуют",
+  en: "No analyses available yet",
+};
+
+interface RecentDiseaseItem {
+  name: string;
+  plant: string;
+  severity: string;
+  time: string;
+}
 
 export default function DiseaseAnalysisPage() {
   const t = useTranslations("disease");
@@ -54,6 +62,44 @@ export default function DiseaseAnalysisPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [status, setStatus] = useState<AnalysisStatus>("idle");
   const [result, setResult] = useState<DiseaseDetectionResult | null>(null);
+  const [recentDetections, setRecentDetections] = useState<RecentDiseaseItem[]>([]);
+
+  const formatTime = (dateStr: string) => {
+    try {
+      const date = new Date(dateStr);
+      const now = new Date();
+      const diffMs = now.getTime() - date.getTime();
+      const diffMin = Math.floor(diffMs / 60000);
+      if (diffMin < 1) return locale === "uz" ? "Hozirgi" : locale === "ru" ? "Только что" : "Just now";
+      if (diffMin < 60) return locale === "uz" ? `${diffMin} daq. oldin` : locale === "ru" ? `${diffMin} мин. назад` : `${diffMin}m ago`;
+      const diffHrs = Math.floor(diffMin / 60);
+      if (diffHrs < 24) return locale === "uz" ? `${diffHrs} soat oldin` : locale === "ru" ? `${diffHrs} ч. назад` : `${diffHrs}h ago`;
+      const diffDays = Math.floor(diffHrs / 24);
+      return locale === "uz" ? `${diffDays} kun oldin` : locale === "ru" ? `${diffDays} дн. назад` : `${diffDays}d ago`;
+    } catch {
+      return dateStr;
+    }
+  };
+
+  useEffect(() => {
+    async function loadRecent() {
+      try {
+        const res = await api.getRecentDiseases(5).catch(() => null);
+        if (res && Array.isArray(res)) {
+          const items = res.map((item: any) => ({
+            name: item.disease_name || "Noma'lum kasallik",
+            plant: item.plant_affected || "O'simlik",
+            severity: item.severity || "medium",
+            time: formatTime(item.created_at),
+          }));
+          setRecentDetections(items);
+        }
+      } catch (err) {
+        console.error("Error loading recent diseases:", err);
+      }
+    }
+    loadRecent();
+  }, [locale]);
 
   const handleImageSelect = (file: File) => { setSelectedFile(file); setResult(null); setStatus("idle"); };
   const handleAnalyze = async () => {
@@ -141,17 +187,23 @@ export default function DiseaseAnalysisPage() {
                   <h3 className="font-semibold text-sm">{t("recentDetections")}</h3>
                 </div>
                 <div className="space-y-3">
-                  {recentDiseases.map((item, i) => (
-                    <div key={i} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
-                      <div>
-                        <p className="text-sm font-medium">{item.name}</p>
-                        <p className="text-xs text-[var(--color-text-muted)]">{item.plant} • {item.time}</p>
+                  {recentDetections.length > 0 ? (
+                    recentDetections.map((item, i) => (
+                      <div key={i} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+                        <div>
+                          <p className="text-sm font-medium">{item.name}</p>
+                          <p className="text-xs text-[var(--color-text-muted)]">{item.plant} • {item.time}</p>
+                        </div>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase" style={{ color: sevColors[item.severity], backgroundColor: `${sevColors[item.severity]}15`, border: `1px solid ${sevColors[item.severity]}30` }}>
+                          {t(`severity.${item.severity as "low" | "medium" | "high" | "critical"}`)}
+                        </span>
                       </div>
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase" style={{ color: sevColors[item.severity], backgroundColor: `${sevColors[item.severity]}15`, border: `1px solid ${sevColors[item.severity]}30` }}>
-                        {t(`severity.${item.severity as "low" | "medium" | "high" | "critical"}`)}
-                      </span>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <p className="text-xs text-[var(--color-text-muted)] py-2 text-center">
+                      {emptyLabels[locale as "uz" | "ru" | "en"] || emptyLabels.uz}
+                    </p>
+                  )}
                 </div>
               </GlassCard>
             </motion.div>

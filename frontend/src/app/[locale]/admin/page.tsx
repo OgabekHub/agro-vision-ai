@@ -69,10 +69,10 @@ export default function AdminPage() {
   ];
 
   const statsData = [
-    { labelKey: "totalAnalyses" as const, value: "2,847", change: "+12.5%", icon: BarChart3, color: "#00FF88" },
-    { labelKey: "imagesUploaded" as const, value: "1,932", change: "+8.3%", icon: Image, color: "#3B82F6" },
-    { labelKey: "activeUsers" as const, value: "456", change: "+23.1%", icon: Users, color: "#8B5CF6" },
-    { labelKey: "aiAccuracy" as const, value: "94.7%", change: "+1.2%", icon: Activity, color: "#06B6D4" },
+    { labelKey: "totalAnalyses" as const, value: "0", change: "0%", icon: BarChart3, color: "#00FF88" },
+    { labelKey: "imagesUploaded" as const, value: "0", change: "0%", icon: Image, color: "#3B82F6" },
+    { labelKey: "activeUsers" as const, value: "0", change: "0%", icon: Users, color: "#8B5CF6" },
+    { labelKey: "aiAccuracy" as const, value: "0%", change: "0%", icon: Activity, color: "#06B6D4" },
   ];
 
   const displayStats = stats ? [

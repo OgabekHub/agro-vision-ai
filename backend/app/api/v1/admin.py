@@ -33,16 +33,16 @@ def get_mock_stats() -> AdminStatsResponse:
     return AdminStatsResponse(
         success=True,
         data={
-            "total_analyses": 2847,
-            "images_uploaded": 1932,
-            "active_users": 456,
-            "ai_accuracy": 94.7,
-            "analyses_today": 47,
-            "analyses_this_week": 312,
+            "total_analyses": 0,
+            "images_uploaded": 0,
+            "active_users": 0,
+            "ai_accuracy": 0.0,
+            "analyses_today": 0,
+            "analyses_this_week": 0,
             "models": {
-                "yolov8": {"status": "online", "version": "v8n-plant-v1", "total_inferences": 1245},
-                "efficientnet": {"status": "online", "version": "B0-disease-v1", "total_inferences": 892},
-                "opencv": {"status": "online", "version": "4.10", "total_inferences": 710},
+                "yolov8": {"status": "online", "version": "v8n-plant-v1", "total_inferences": 0},
+                "efficientnet": {"status": "online", "version": "B0-disease-v1", "total_inferences": 0},
+                "opencv": {"status": "online", "version": "4.10", "total_inferences": 0},
             },
         },
     )

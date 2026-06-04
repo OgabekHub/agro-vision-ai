@@ -143,3 +143,24 @@ async def analyze_disease_endpoint(
         data={**disease_data, "image_url": image_url, "image_size_bytes": len(contents), "model_version": model_used},
         processing_time_ms=processing_time,
     )
+
+
+@router.get("/recent")
+async def get_recent_diseases(limit: int = 5):
+    """Get recent disease analyses from database."""
+    from app.core.supabase_service import get_supabase
+    client = get_supabase()
+    if not client:
+        return [
+            {"disease_name": "Powdery Mildew", "plant_affected": "Grape", "severity": "medium", "created_at": "2026-06-04T06:00:00Z"},
+            {"disease_name": "Cotton Leaf Curl", "plant_affected": "Cotton", "severity": "critical", "created_at": "2026-06-04T04:00:00Z"},
+            {"disease_name": "Rust Disease", "plant_affected": "Wheat", "severity": "low", "created_at": "2026-06-04T02:00:00Z"},
+        ]
+    try:
+        response = client.table("disease_analyses").select("disease_name, plant_affected, severity, created_at").order("created_at", desc=True).limit(limit).execute()
+        return response.data or []
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).error(f"Error fetching recent diseases: {e}")
+        return []
+
