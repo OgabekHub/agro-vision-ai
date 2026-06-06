@@ -10,8 +10,8 @@ import { RegionData } from "@/types";
 // Regionlar uchun ko'p tilli ma'lumotlar
 const regionsData = [
   {
-    id: "tashkent", name: "Tashkent", name_uz: "Toshkent", name_ru: "Ташкент",
-    capital: "Tashkent", capital_uz: "Toshkent", capital_ru: "Ташкент",
+    id: "tashkent", name: "Tashkent Region", name_uz: "Toshkent viloyati", name_ru: "Ташкентская область",
+    capital: "Nurafshon", capital_uz: "Nurafshon", capital_ru: "Нурафшан",
     coordinates: [41.299, 69.240], area_km2: 15300,
     climate: "Continental, Semi-arid", climate_uz: "Kontinental, Yarim quruq", climate_ru: "Континентальный, полузасушливый",
     avg_temperature: { summer: 36, winter: -2 }, annual_rainfall_mm: 440,
@@ -21,12 +21,12 @@ const regionsData = [
     soil_types: ["Loamy", "Sierozem"],
     soil_types_uz: ["Qumoq", "Bo'z tuproq"],
     soil_types_ru: ["Суглинок", "Серозём"],
-    agricultural_area_hectares: 420000,
+    agricultural_area_hectares: 395000,
   },
   {
     id: "samarkand", name: "Samarkand", name_uz: "Samarqand", name_ru: "Самарканд",
     capital: "Samarkand", capital_uz: "Samarqand", capital_ru: "Самарканд",
-    coordinates: [39.654, 66.959], area_km2: 16400,
+    coordinates: [39.654, 66.959], area_km2: 16773,
     climate: "Continental", climate_uz: "Kontinental", climate_ru: "Континентальный",
     avg_temperature: { summer: 35, winter: -1 }, annual_rainfall_mm: 350,
     main_crops: ["Cotton", "Wheat", "Silk", "Grapes", "Melons"],
@@ -54,7 +54,7 @@ const regionsData = [
   {
     id: "bukhara", name: "Bukhara", name_uz: "Buxoro", name_ru: "Бухара",
     capital: "Bukhara", capital_uz: "Buxoro", capital_ru: "Бухара",
-    coordinates: [39.767, 64.421], area_km2: 39400,
+    coordinates: [39.767, 64.421], area_km2: 40300,
     climate: "Arid, Desert", climate_uz: "Quruq, Cho'l", climate_ru: "Засушливый, пустынный",
     avg_temperature: { summer: 40, winter: 1 }, annual_rainfall_mm: 140,
     main_crops: ["Cotton", "Karakul Sheep", "Silkworm", "Wheat"],
@@ -68,7 +68,7 @@ const regionsData = [
   {
     id: "andijan", name: "Andijan", name_uz: "Andijon", name_ru: "Андижан",
     capital: "Andijan", capital_uz: "Andijon", capital_ru: "Андижан",
-    coordinates: [40.783, 72.344], area_km2: 4200,
+    coordinates: [40.783, 72.344], area_km2: 4300,
     climate: "Continental, Fertile", climate_uz: "Kontinental, Unumdor", climate_ru: "Континентальный, плодородный",
     avg_temperature: { summer: 33, winter: -3 }, annual_rainfall_mm: 220,
     main_crops: ["Cotton", "Corn", "Vegetables", "Fruits", "Rice"],
@@ -96,7 +96,7 @@ const regionsData = [
   {
     id: "kashkadarya", name: "Kashkadarya", name_uz: "Qashqadaryo", name_ru: "Кашкадарья",
     capital: "Karshi", capital_uz: "Qarshi", capital_ru: "Карши",
-    coordinates: [38.860, 65.800], area_km2: 28400,
+    coordinates: [38.860, 65.800], area_km2: 28568,
     climate: "Continental, Semi-arid", climate_uz: "Kontinental, Yarim quruq", climate_ru: "Континентальный, полузасушливый",
     avg_temperature: { summer: 38, winter: 0 }, annual_rainfall_mm: 250,
     main_crops: ["Cotton", "Wheat", "Grain", "Livestock"],
@@ -110,7 +110,7 @@ const regionsData = [
   {
     id: "surkhandarya", name: "Surkhandarya", name_uz: "Surxondaryo", name_ru: "Сурхандарья",
     capital: "Termez", capital_uz: "Termiz", capital_ru: "Термез",
-    coordinates: [37.224, 67.278], area_km2: 20800,
+    coordinates: [37.224, 67.278], area_km2: 20099,
     climate: "Subtropical, Hot", climate_uz: "Subtropik, Issiq", climate_ru: "Субтропический, жаркий",
     avg_temperature: { summer: 42, winter: 3 }, annual_rainfall_mm: 300,
     main_crops: ["Cotton", "Citrus", "Rice", "Sugarcane", "Vegetables"],
@@ -138,7 +138,7 @@ const regionsData = [
   {
     id: "jizzakh", name: "Jizzakh", name_uz: "Jizzax", name_ru: "Джизак",
     capital: "Jizzakh", capital_uz: "Jizzax", capital_ru: "Джизак",
-    coordinates: [40.115, 67.842], area_km2: 20500,
+    coordinates: [40.115, 67.842], area_km2: 21179,
     climate: "Continental", climate_uz: "Kontinental", climate_ru: "Континентальный",
     avg_temperature: { summer: 37, winter: -1 }, annual_rainfall_mm: 300,
     main_crops: ["Cotton", "Wheat", "Livestock", "Vegetables"],
@@ -166,7 +166,7 @@ const regionsData = [
   {
     id: "syrdarya", name: "Syrdarya", name_uz: "Sirdaryo", name_ru: "Сырдарья",
     capital: "Gulistan", capital_uz: "Guliston", capital_ru: "Гулистан",
-    coordinates: [40.486, 68.715], area_km2: 5100,
+    coordinates: [40.486, 68.715], area_km2: 4276,
     climate: "Continental", climate_uz: "Kontinental", climate_ru: "Континентальный",
     avg_temperature: { summer: 36, winter: -1 }, annual_rainfall_mm: 300,
     main_crops: ["Cotton", "Wheat", "Rice", "Vegetables"],
@@ -182,7 +182,7 @@ const regionsData = [
     capital: "Nukus", capital_uz: "Nukus", capital_ru: "Нукус",
     coordinates: [42.461, 59.606], area_km2: 166600,
     climate: "Arid, Continental", climate_uz: "Quruq, Kontinental", climate_ru: "Засушливый, континентальный",
-    avg_temperature: { summer: 35, winter: -7 }, annual_rainfall_mm: 90,
+    avg_temperature: { summer: 35, winter: -8 }, annual_rainfall_mm: 90,
     main_crops: ["Cotton", "Rice", "Wheat", "Melons"],
     main_crops_uz: ["Paxta", "Sholi", "Bug'doy", "Qovun"],
     main_crops_ru: ["Хлопок", "Рис", "Пшеница", "Дыня"],
@@ -194,7 +194,7 @@ const regionsData = [
   {
     id: "tashkent_city", name: "Tashkent City", name_uz: "Toshkent shahri", name_ru: "Город Ташкент",
     capital: "Tashkent", capital_uz: "Toshkent", capital_ru: "Ташкент",
-    coordinates: [41.311, 69.280], area_km2: 335,
+    coordinates: [41.311, 69.280], area_km2: 435,
     climate: "Continental Urban", climate_uz: "Kontinental shahar", climate_ru: "Континентальный городской",
     avg_temperature: { summer: 35, winter: -1 }, annual_rainfall_mm: 440,
     main_crops: ["Urban Agriculture", "Greenhouses", "Vegetables"],
