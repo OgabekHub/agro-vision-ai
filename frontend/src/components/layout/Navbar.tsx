@@ -57,18 +57,14 @@ export default function Navbar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? "glass border-b border-white/5" : "bg-transparent"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
+          isScrolled ? "border-white/5" : "border-transparent"
         }`}
-        style={
-          isScrolled
-            ? {
-                borderRadius: 0,
-                backdropFilter: "blur(20px) saturate(150%)",
-                background: "rgba(5, 10, 24, 0.85)",
-              }
-            : {}
-        }
+        style={{
+          backdropFilter: isScrolled ? "blur(20px) saturate(150%)" : "none",
+          WebkitBackdropFilter: isScrolled ? "blur(20px) saturate(150%)" : "none",
+          background: isScrolled ? "rgba(5, 10, 24, 0.85)" : "transparent",
+        }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
