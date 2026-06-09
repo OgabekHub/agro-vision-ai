@@ -27,13 +27,13 @@ export default function HologramPlant() {
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       >
         {/* Radial green glow behind plant */}
-        <div className="absolute w-[70%] h-[70%] rounded-full bg-[var(--color-primary)]/10 blur-3xl" />
+        <div className="absolute w-[70%] h-[70%] rounded-full bg-[var(--color-primary)]/10 blur-3xl pointer-events-none" />
         
         {/* Hologram plant image */}
         <img
           src="/images/hologram_plant.png"
           alt="Hologram Plant Sprout"
-          className="w-full h-full object-contain filter drop-shadow-[0_0_20px_rgba(0,255,136,0.4)] select-none pointer-events-none"
+          className="w-full h-full object-contain mix-blend-screen filter drop-shadow-[0_0_20px_rgba(0,255,136,0.4)] select-none pointer-events-none"
         />
       </motion.div>
 
@@ -42,3 +42,4 @@ export default function HologramPlant() {
     </div>
   );
 }
+
