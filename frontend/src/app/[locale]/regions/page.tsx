@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import { MapPin, ThermometerSun, Droplets, Sprout, Cloud, ChevronRight } from "lucide-react";
@@ -211,6 +211,23 @@ export default function RegionsPage() {
   const t = useTranslations("regions");
   const locale = useLocale();
   const [selectedRegion, setSelectedRegion] = useState<typeof regionsData[0] | null>(null);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = decodeURIComponent(window.location.hash.replace("#", ""));
+      if (hash) {
+        const match = regionsData.find((r) => r.id === hash);
+        if (match) {
+          setSelectedRegion(match);
+        }
+      }
+    };
+
+    handleHashChange();
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
 
   // Locale bo'yicha viloyat nomini qaytarish
   const getLocaleName = (r: typeof regionsData[0]) => {

@@ -3,13 +3,23 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useLocale } from "next-intl";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import HologramParticles from "./HologramParticles";
 import { uzbekistanMapRegions, MapRegion } from "@/data/uzbekistanMapData";
 
 export default function HologramMap() {
   const locale = useLocale();
+  const router = useRouter();
   const [hoveredRegion, setHoveredRegion] = useState<MapRegion | null>(null);
+
+  const mapIdToRegionId: Record<string, string> = {
+    navoiy: "navoi",
+    qashqadaryo: "kashkadarya",
+    samarqand: "samarkand",
+    sirdaryo: "syrdarya",
+    surxondaryo: "surkhandarya",
+    xorazm: "khorezm",
+  };
 
   return (
     <div className="relative w-full max-w-full aspect-square flex flex-col items-center justify-center mx-auto">
@@ -28,7 +38,10 @@ export default function HologramMap() {
       />
 
       {/* Floating container */}
-      <Link href="/regions" className="w-[90%] h-[90%] flex items-center justify-center group relative z-20">
+      <div
+        onClick={() => router.push("/regions")}
+        className="w-[90%] h-[90%] flex items-center justify-center group relative z-20 cursor-pointer"
+      >
         <motion.div
           className="relative w-full h-full flex flex-col items-center justify-center"
           animate={{ y: [-8, 8, -8] }}
@@ -79,6 +92,15 @@ export default function HologramMap() {
                   className="transition-all duration-300 ease-out cursor-pointer"
                   onMouseEnter={() => setHoveredRegion(region)}
                   onMouseLeave={() => setHoveredRegion(null)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!region.isWater) {
+                      const targetId = mapIdToRegionId[region.id] || region.id;
+                      router.push(`/regions#${targetId}`);
+                    } else {
+                      router.push("/regions");
+                    }
+                  }}
                 />
               );
             })}
@@ -102,7 +124,7 @@ export default function HologramMap() {
             )}
           </div>
         </motion.div>
-      </Link>
+      </div>
 
       {/* Floating blue dot particles */}
       <HologramParticles count={12} />
