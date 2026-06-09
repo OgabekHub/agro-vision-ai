@@ -3,7 +3,7 @@
 import { motion, type Variants } from "framer-motion";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
-import { Zap, ArrowRight, Leaf, Bug, Mountain, MapPin, BarChart3, Shield, Sparkles, ChevronRight, Cpu } from "lucide-react";
+import { Zap, ArrowRight, Leaf, Bug, Mountain, MapPin, BarChart3, Shield, Sparkles, ChevronRight, Cpu, Upload, Brain } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
 
 import HologramMap from "@/components/ui/HologramMap";
@@ -154,16 +154,50 @@ export default function LandingPage() {
             </h2>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {(["upload", "processing", "results"] as const).map((step, i) => (
-              <motion.div key={step} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
-                <GlassCard glow glowColor={i === 0 ? "green" : i === 1 ? "purple" : "cyan"} padding="lg" className="text-center relative overflow-hidden h-full">
-                  <div className="absolute top-4 right-4 text-6xl font-bold text-white/3 font-[family-name:var(--font-display)]">{t(`howItWorks.steps.${step}.step`)}</div>
-                  <div className="text-5xl mb-4">{["📸", "🧠", "📊"][i]}</div>
-                  <h3 className="text-xl font-bold mb-3 font-[family-name:var(--font-display)]">{t(`howItWorks.steps.${step}.title`)}</h3>
-                  <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{t(`howItWorks.steps.${step}.desc`)}</p>
-                </GlassCard>
-              </motion.div>
-            ))}
+            {(["upload", "processing", "results"] as const).map((step, i) => {
+              const stepConfig = [
+                {
+                  icon: Upload,
+                  color: "#00FF88",
+                  bgGlow: "rgba(0, 255, 136, 0.12)",
+                  borderColor: "rgba(0, 255, 136, 0.2)"
+                },
+                {
+                  icon: Brain,
+                  color: "#8B5CF6",
+                  bgGlow: "rgba(139, 92, 246, 0.12)",
+                  borderColor: "rgba(139, 92, 246, 0.2)"
+                },
+                {
+                  icon: BarChart3,
+                  color: "#06B6D4",
+                  bgGlow: "rgba(6, 182, 212, 0.12)",
+                  borderColor: "rgba(6, 182, 212, 0.2)"
+                }
+              ][i];
+
+              const Icon = stepConfig.icon;
+
+              return (
+                <motion.div key={step} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
+                  <GlassCard glow glowColor={i === 0 ? "green" : i === 1 ? "purple" : "cyan"} padding="lg" className="text-center relative overflow-hidden h-full">
+                    <div className="absolute top-4 right-4 text-6xl font-bold text-white/3 font-[family-name:var(--font-display)]">{t(`howItWorks.steps.${step}.step`)}</div>
+                    
+                    {/* Premium Icon Container */}
+                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 relative group/icon transition-all duration-300" style={{ 
+                      backgroundColor: stepConfig.bgGlow,
+                      border: `1px solid ${stepConfig.borderColor}`,
+                      boxShadow: `0 0 20px ${stepConfig.bgGlow}`
+                    }}>
+                      <Icon className="w-8 h-8 transition-transform duration-300 group-hover/icon:scale-110" style={{ color: stepConfig.color }} />
+                    </div>
+
+                    <h3 className="text-xl font-bold mb-3 font-[family-name:var(--font-display)]">{t(`howItWorks.steps.${step}.title`)}</h3>
+                    <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{t(`howItWorks.steps.${step}.desc`)}</p>
+                  </GlassCard>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
