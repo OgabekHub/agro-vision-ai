@@ -12,7 +12,7 @@ export default function HologramMap() {
   const [hoveredRegion, setHoveredRegion] = useState<MapRegion | null>(null);
 
   return (
-    <div className="relative w-full max-w-[280px] aspect-square flex flex-col items-center justify-center mx-auto">
+    <div className="relative w-full max-w-full aspect-square flex flex-col items-center justify-center mx-auto">
       {/* Outer rotating HUD ring */}
       <motion.div
         className="absolute w-full h-full rounded-full border border-dashed border-[var(--color-primary)]/10 pointer-events-none"

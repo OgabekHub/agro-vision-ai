@@ -5,7 +5,7 @@ import HologramParticles from "./HologramParticles";
 
 export default function HologramPlant() {
   return (
-    <div className="relative w-full max-w-[320px] aspect-square flex items-center justify-center mx-auto">
+    <div className="relative w-full max-w-full aspect-square flex items-center justify-center mx-auto">
       {/* Outer rotating HUD ring (very subtle) */}
       <motion.div
         className="absolute w-full h-full rounded-full border border-dashed border-[var(--color-primary)]/5 pointer-events-none"
