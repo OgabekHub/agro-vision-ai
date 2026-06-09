@@ -35,11 +35,8 @@ export default function Navbar() {
     { href: "/disease-analysis", label: t("diseaseAnalysis"), icon: Bug },
     { href: "/land-analysis", label: t("landAnalysis"), icon: Mountain },
     { href: "/regions", label: t("regions"), icon: MapPin },
+    { href: "/admin", label: t("admin"), icon: Shield },
   ];
-
-  if (user?.role === "admin") {
-    navLinks.push({ href: "/admin", label: t("admin"), icon: Shield });
-  }
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -146,21 +143,13 @@ export default function Navbar() {
                   </button>
                 </div>
               ) : (
-                <div className="flex items-center gap-2">
-                  <Link
-                    href="/login"
-                    className="px-3 py-2 rounded-lg text-xs font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-white/5 transition-all"
-                  >
-                    {t("login")}
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="btn-primary text-xs py-2 px-3 whitespace-nowrap xl:text-sm xl:py-2.5 xl:px-4"
-                  >
-                    <Zap className="w-4 h-4 flex-shrink-0" />
-                    <span>{t("register")}</span>
-                  </Link>
-                </div>
+                <Link
+                  href="/dashboard"
+                  className="btn-primary text-xs py-2 px-3 whitespace-nowrap xl:text-sm xl:py-2.5 xl:px-5"
+                >
+                  <Zap className="w-4 h-4 flex-shrink-0" />
+                  <span className="hidden xl:inline">{t("startAnalysis")}</span>
+                </Link>
               )}
             </div>
 
@@ -241,22 +230,14 @@ export default function Navbar() {
                     </button>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-2">
-                    <Link
-                      href="/login"
-                      className="w-full py-3 rounded-xl text-center text-sm font-medium border border-white/10 text-white hover:bg-white/5 transition-all"
-                      onClick={() => setIsMobileOpen(false)}
-                    >
-                      {t("login")}
-                    </Link>
-                    <Link
-                      href="/register"
-                      className="btn-primary w-full text-center text-sm py-3"
-                      onClick={() => setIsMobileOpen(false)}
-                    >
-                      {t("register")}
-                    </Link>
-                  </div>
+                  <Link
+                    href="/dashboard"
+                    className="btn-primary w-full text-center text-sm py-3"
+                    onClick={() => setIsMobileOpen(false)}
+                  >
+                    <Zap className="w-4 h-4 flex-shrink-0" />
+                    <span>{t("startAnalysis")}</span>
+                  </Link>
                 )}
                 
                 <a
