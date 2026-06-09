@@ -6,6 +6,9 @@ import { useTranslations } from "next-intl";
 import { Zap, ArrowRight, Leaf, Bug, Mountain, MapPin, BarChart3, Shield, Sparkles, ChevronRight, Cpu } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
 
+import HologramMap from "@/components/ui/HologramMap";
+import HologramPlant from "@/components/ui/HologramPlant";
+
 const fadeUp: Variants = {
   initial: { opacity: 0, y: 30 },
   animate: {
@@ -46,48 +49,63 @@ export default function LandingPage() {
       </div>
 
       {/* HERO */}
-      <section className="relative min-h-[90vh] flex items-center justify-center px-4 overflow-hidden">
-        <div className="max-w-6xl mx-auto text-center">
-          <motion.div {...stagger} initial="initial" animate="animate" className="space-y-8">
-            <motion.div {...fadeUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-[var(--color-border-glow)] text-sm">
-              <Sparkles className="w-4 h-4 text-[var(--color-primary)]" />
-              <span className="text-[var(--color-text-secondary)]">{t("badge")}</span>
-              <span className="text-[var(--color-primary)] font-semibold">{t("badgeModel")}</span>
-            </motion.div>
+      <section className="relative min-h-[95vh] lg:min-h-screen flex items-center justify-center px-4 overflow-hidden pt-16 lg:pt-0">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center justify-center py-12 lg:py-20">
+            {/* Left Hologram Map (Visible on lg+) */}
+            <div className="hidden lg:block lg:col-span-3">
+              <HologramMap />
+            </div>
 
-            <motion.h1 {...fadeUp} transition={{ delay: 0.1, duration: 0.8 }} className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold font-[family-name:var(--font-display)] leading-[1.05] tracking-tight">
-              <span className="text-[var(--color-text-primary)]">{t("headline1")}</span>
-              <br />
-              <span className="gradient-text">{t("headline2")}</span>
-              <br />
-              <span className="text-[var(--color-text-primary)]">{t("headline3")}</span>
-            </motion.h1>
+            {/* Center Hero Text Content */}
+            <div className="col-span-1 lg:col-span-6 text-center">
+              <motion.div {...stagger} initial="initial" animate="animate" className="space-y-8">
+                <motion.div {...fadeUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-[var(--color-border-glow)] text-sm">
+                  <Sparkles className="w-4 h-4 text-[var(--color-primary)]" />
+                  <span className="text-[var(--color-text-secondary)]">{t("badge")}</span>
+                  <span className="text-[var(--color-primary)] font-semibold">{t("badgeModel")}</span>
+                </motion.div>
 
-            <motion.p {...fadeUp} transition={{ delay: 0.2 }} className="text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto leading-relaxed">
-              {t("subtitle")}
-            </motion.p>
+                <motion.h1 {...fadeUp} transition={{ delay: 0.1, duration: 0.8 }} className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold font-[family-name:var(--font-display)] leading-[1.05] tracking-tight">
+                  <span className="text-[var(--color-text-primary)]">{t("headline1")}</span>
+                  <br />
+                  <span className="gradient-text">{t("headline2")}</span>
+                  <br />
+                  <span className="text-[var(--color-text-primary)]">{t("headline3")}</span>
+                </motion.h1>
 
-            <motion.div {...fadeUp} transition={{ delay: 0.3 }} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/dashboard" className="btn-primary text-base px-8 py-4 rounded-xl">
-                <Zap className="w-5 h-5" />
-                {t("ctaPrimary")}
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link href="/regions" className="btn-secondary text-base px-8 py-4 rounded-xl">
-                <MapPin className="w-5 h-5" />
-                {t("ctaSecondary")}
-              </Link>
-            </motion.div>
+                <motion.p {...fadeUp} transition={{ delay: 0.2 }} className="text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto leading-relaxed">
+                  {t("subtitle")}
+                </motion.p>
 
-            <motion.div {...fadeUp} transition={{ delay: 0.4 }} className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 pt-8">
-              {stats.map((stat) => (
-                <div key={stat.labelKey} className="text-center">
-                  <div className="text-3xl sm:text-4xl font-bold gradient-text font-[family-name:var(--font-display)]">{stat.value}</div>
-                  <div className="text-xs sm:text-sm text-[var(--color-text-muted)] mt-1">{t(`stats.${stat.labelKey}`)}</div>
-                </div>
-              ))}
-            </motion.div>
-          </motion.div>
+                <motion.div {...fadeUp} transition={{ delay: 0.3 }} className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <Link href="/dashboard" className="btn-primary text-base px-8 py-4 rounded-xl">
+                    <Zap className="w-5 h-5" />
+                    {t("ctaPrimary")}
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                  <Link href="/regions" className="btn-secondary text-base px-8 py-4 rounded-xl">
+                    <MapPin className="w-5 h-5" />
+                    {t("ctaSecondary")}
+                  </Link>
+                </motion.div>
+
+                <motion.div {...fadeUp} transition={{ delay: 0.4 }} className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 pt-8">
+                  {stats.map((stat) => (
+                    <div key={stat.labelKey} className="text-center">
+                      <div className="text-3xl sm:text-4xl font-bold gradient-text font-[family-name:var(--font-display)]">{stat.value}</div>
+                      <div className="text-xs sm:text-sm text-[var(--color-text-muted)] mt-1">{t(`stats.${stat.labelKey}`)}</div>
+                    </div>
+                  ))}
+                </motion.div>
+              </motion.div>
+            </div>
+
+            {/* Right Hologram Plant (Visible on lg+) */}
+            <div className="hidden lg:block lg:col-span-3">
+              <HologramPlant />
+            </div>
+          </div>
         </div>
       </section>
 
