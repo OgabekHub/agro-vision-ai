@@ -40,31 +40,79 @@ export default function AdminPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLog, setSelectedLog] = useState<any>(null);
 
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isAuth = sessionStorage.getItem("admin_auth") === "true";
+      if (isAuth) {
+        setIsAdminAuthenticated(true);
+      }
+    }
+  }, []);
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === "20042405") {
+      setIsAdminAuthenticated(true);
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("admin_auth", "true");
+      }
+      setErrorMsg("");
+    } else {
+      setErrorMsg(t("invalidPassword"));
+    }
+  };
+
   // Authenticate & Authorization check
   if (loading) {
     return (
       <div className="min-h-screen bg-[var(--color-bg-dark)] flex items-center justify-center text-[var(--color-text-secondary)] text-sm">
-        Yuklanmoqda...
+        {tc("loading")}
       </div>
     );
   }
 
-  if (!user || user.role !== "admin") {
+  if (!isAdminAuthenticated) {
     return (
       <div className="min-h-[80vh] bg-[var(--color-bg-dark)] flex items-center justify-center px-4">
-        <GlassCard className="max-w-md w-full p-8 text-center border border-red-500/20 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-red-500" />
-          <Shield className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-white mb-2">Kirish taqiqlangan</h2>
-          <p className="text-sm text-[var(--color-text-secondary)] mb-6 leading-relaxed">
-            Ushbu sahifaga kirish taqiqlangan. Sizda kerakli huquqlar (Admin roli) mavjud emas.
+        <GlassCard className="max-w-md w-full p-8 border border-white/5 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent-cyan)]" />
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-accent-cyan)] flex items-center justify-center mx-auto mb-4">
+            <Shield className="w-6 h-6 text-[var(--color-bg-dark)]" />
+          </div>
+          <h2 className="text-xl font-bold text-center text-white mb-2">{t("authTitle")}</h2>
+          <p className="text-xs text-center text-[var(--color-text-secondary)] mb-6 leading-relaxed">
+            {t("authSubtitle")}
           </p>
-          <button
-            onClick={() => router.push("/")}
-            className="btn-primary w-full py-2.5 rounded-xl text-xs font-semibold"
-          >
-            Bosh sahifaga qaytish
-          </button>
+          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">
+                {t("passwordLabel")}
+              </label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder={t("passwordPlaceholder")}
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-[var(--color-border-glow)] focus:bg-white/8 transition-all"
+              />
+            </div>
+            {errorMsg && (
+              <p className="text-xs font-medium text-[var(--color-severity-high)] text-center animate-pulse">
+                {errorMsg}
+              </p>
+            )}
+            <button
+              type="submit"
+              className="btn-primary w-full py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all"
+            >
+              {t("btnUnlock")}
+            </button>
+          </form>
         </GlassCard>
       </div>
     );

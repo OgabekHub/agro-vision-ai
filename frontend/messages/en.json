@@ -191,7 +191,13 @@
       "analyses": "Analyses",
       "joined": "Joined"
     },
-    "thisWeek": "this week"
+    "thisWeek": "this week",
+    "authTitle": "Admin Access",
+    "authSubtitle": "Enter the admin password to access this page.",
+    "passwordLabel": "Admin Password",
+    "passwordPlaceholder": "Enter password...",
+    "btnUnlock": "Unlock",
+    "invalidPassword": "Invalid password! Please try again."
   },
   "analysis": {
     "processing": {

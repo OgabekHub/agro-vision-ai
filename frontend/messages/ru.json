@@ -191,7 +191,13 @@
       "analyses": "Анализы",
       "joined": "Присоединился"
     },
-    "thisWeek": "на этой неделе"
+    "thisWeek": "на этой неделе",
+    "authTitle": "Вход в админ-панель",
+    "authSubtitle": "Введите пароль администратора для доступа к этой странице.",
+    "passwordLabel": "Пароль администратора",
+    "passwordPlaceholder": "Введите пароль...",
+    "btnUnlock": "Войти",
+    "invalidPassword": "Неверный пароль! Пожалуйста, попробуйте еще раз."
   },
   "analysis": {
     "processing": {

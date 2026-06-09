@@ -191,7 +191,13 @@
       "analyses": "Tahlillar",
       "joined": "Qo'shilgan"
     },
-    "thisWeek": "bu hafta"
+    "thisWeek": "bu hafta",
+    "authTitle": "Admin paneliga kirish",
+    "authSubtitle": "Ushbu sahifaga kirish uchun admin parolini kiriting.",
+    "passwordLabel": "Admin paroli",
+    "passwordPlaceholder": "Parolni kiriting...",
+    "btnUnlock": "Kirish",
+    "invalidPassword": "Noto'g'ri parol! Qaytadan urinib ko'ring."
   },
   "analysis": {
     "processing": {
