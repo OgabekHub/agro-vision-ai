@@ -36,7 +36,7 @@ export default function ConfidenceGauge({
         <svg
           width={width}
           height={width}
-          className="transform -rotate-90"
+          className="transform -rotate-90 overflow-visible"
         >
           {/* Background circle */}
           <circle
