@@ -44,6 +44,10 @@ export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
+  const [stats, setStats] = useState<any>(null);
+  const [logsList, setLogsList] = useState<any[]>([]);
+  const [usersList, setUsersList] = useState<any[]>([]);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const isAuth = sessionStorage.getItem("admin_auth") === "true";
@@ -52,6 +56,32 @@ export default function AdminPage() {
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (!isAdminAuthenticated) return;
+    async function loadData() {
+      try {
+        const [statsRes, logsRes, usersRes] = await Promise.all([
+          api.getAdminStats().catch(() => null),
+          api.getAdminLogs(1, 50).catch(() => null),
+          api.getAdminUsers(1, 50).catch(() => null),
+        ]);
+
+        if (statsRes?.success && statsRes.data) {
+          setStats(statsRes.data);
+        }
+        if (logsRes?.success && logsRes.data) {
+          setLogsList(logsRes.data);
+        }
+        if (usersRes?.success && usersRes.data) {
+          setUsersList(usersRes.data);
+        }
+      } catch (err) {
+        console.error("Admin data load error", err);
+      }
+    }
+    loadData();
+  }, [isAdminAuthenticated]);
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -124,10 +154,6 @@ export default function AdminPage() {
     ru: "Удалить"
   }[locale as "uz" | "ru" | "en"] || "O'chirish";
 
-  const [stats, setStats] = useState<any>(null);
-  const [logsList, setLogsList] = useState<any[]>([]);
-  const [usersList, setUsersList] = useState<any[]>([]);
-
   const handleDeleteLog = async (logId: string) => {
     if (!confirm("Haqiqatan ham ushbu jurnalni o'chirmoqchimisiz?")) return;
     try {
@@ -141,31 +167,6 @@ export default function AdminPage() {
       console.error("Failed to delete log:", err);
     }
   };
-
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const [statsRes, logsRes, usersRes] = await Promise.all([
-          api.getAdminStats().catch(() => null),
-          api.getAdminLogs(1, 50).catch(() => null),
-          api.getAdminUsers(1, 50).catch(() => null),
-        ]);
-
-        if (statsRes?.success && statsRes.data) {
-          setStats(statsRes.data);
-        }
-        if (logsRes?.success && logsRes.data) {
-          setLogsList(logsRes.data);
-        }
-        if (usersRes?.success && usersRes.data) {
-          setUsersList(usersRes.data);
-        }
-      } catch (err) {
-        console.error("Admin data load error", err);
-      }
-    }
-    loadData();
-  }, []);
 
   const tabs: { id: Tab; icon: typeof Shield }[] = [
     { id: "overview", icon: BarChart3 },
