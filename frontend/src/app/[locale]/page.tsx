@@ -53,12 +53,12 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center justify-center py-0">
             {/* Left Hologram Map (Visible on lg+) */}
-            <div className="hidden lg:block lg:col-span-3">
+            <div className="hidden lg:block lg:col-span-2">
               <HologramMap />
             </div>
 
             {/* Center Hero Text Content */}
-            <div className="col-span-1 lg:col-span-6 text-center">
+            <div className="col-span-1 lg:col-span-8 text-center">
               <motion.div {...stagger} initial="initial" animate="animate" className="space-y-8">
                 <motion.div {...fadeUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-[var(--color-border-glow)] text-sm">
                   <Sparkles className="w-4 h-4 text-[var(--color-primary)]" />
@@ -66,7 +66,7 @@ export default function LandingPage() {
                   <span className="text-[var(--color-primary)] font-semibold">{t("badgeModel")}</span>
                 </motion.div>
 
-                <motion.h1 {...fadeUp} transition={{ delay: 0.1, duration: 0.8 }} className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold font-[family-name:var(--font-display)] leading-[1.05] tracking-tight">
+                <motion.h1 {...fadeUp} transition={{ delay: 0.1, duration: 0.8 }} className="text-5xl sm:text-6xl lg:text-6xl xl:text-7xl font-bold font-[family-name:var(--font-display)] leading-[1.05] tracking-tight">
                   <span className="text-[var(--color-text-primary)]">{t("headline1")}</span>
                   <br />
                   <span className="gradient-text">{t("headline2")}</span>
@@ -102,9 +102,10 @@ export default function LandingPage() {
             </div>
 
             {/* Right Hologram Plant (Visible on lg+) */}
-            <div className="hidden lg:block lg:col-span-3">
+            <div className="hidden lg:block lg:col-span-2">
               <HologramPlant />
             </div>
+
 
 
           </div>
