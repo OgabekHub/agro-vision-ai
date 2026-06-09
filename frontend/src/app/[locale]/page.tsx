@@ -66,7 +66,7 @@ export default function LandingPage() {
                 <span className="text-[var(--color-primary)] font-semibold">{t("badgeModel")}</span>
               </motion.div>
 
-              <motion.h1 {...fadeUp} transition={{ delay: 0.1, duration: 0.8 }} className="text-[38px] sm:text-[48px] lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold font-[family-name:var(--font-display)] leading-[1.05] tracking-tight">
+              <motion.h1 {...fadeUp} transition={{ delay: 0.1, duration: 0.8 }} className="text-[40px] sm:text-[52px] lg:text-[54px] xl:text-[66px] 2xl:text-[84px] font-bold font-[family-name:var(--font-display)] leading-[1.05] tracking-tight">
                 <span className="text-[var(--color-text-primary)]">{t("headline1")}</span>
                 <br />
                 <span className="gradient-text">{t("headline2")}</span>
