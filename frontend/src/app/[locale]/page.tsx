@@ -49,7 +49,7 @@ export default function LandingPage() {
       </div>
 
       {/* HERO */}
-      <section className="relative min-h-[80vh] lg:min-h-[85vh] flex items-center justify-center px-4 overflow-hidden pt-16 lg:pt-12">
+      <section className="relative min-h-[80vh] lg:min-h-[85vh] flex items-center justify-center px-4 overflow-hidden pt-14 lg:pt-8">
         <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-6 relative z-20">
           
           {/* Left Hologram Map */}
