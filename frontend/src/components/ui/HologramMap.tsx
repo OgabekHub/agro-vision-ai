@@ -34,13 +34,13 @@ export default function HologramMap() {
           animate={{ y: [-8, 8, -8] }}
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
         >
-          {/* Radial green glow behind map */}
-          <div className="absolute w-[70%] h-[70%] rounded-full bg-[var(--color-primary)]/5 blur-3xl pointer-events-none" />
+          {/* Radial green glow behind map - increased opacity for better aura */}
+          <div className="absolute w-[70%] h-[70%] rounded-full bg-[var(--color-primary)]/15 blur-3xl pointer-events-none" />
           
-          {/* Interactive SVG Map */}
+          {/* Interactive SVG Map - increased default drop shadow glow */}
           <svg
             viewBox="0 0 793 517"
-            className="w-full h-auto filter drop-shadow-[0_0_15px_rgba(0,255,136,0.3)] transition-all duration-500 group-hover:drop-shadow-[0_0_20px_rgba(0,255,136,0.5)] select-none pointer-events-auto"
+            className="w-full h-auto filter drop-shadow-[0_0_20px_rgba(0,255,136,0.6)] transition-all duration-500 group-hover:drop-shadow-[0_0_28px_rgba(0,255,136,0.85)] select-none pointer-events-auto"
             xmlns="http://www.w3.org/2000/svg"
           >
             {uzbekistanMapRegions.map((region, idx) => {
@@ -59,22 +59,22 @@ export default function HologramMap() {
                   fill={
                     region.isWater
                       ? isHovered
-                        ? "rgba(59, 130, 246, 0.15)"
-                        : "rgba(59, 130, 246, 0.05)"
+                        ? "rgba(59, 130, 246, 0.25)"
+                        : "rgba(59, 130, 246, 0.08)"
                       : isHovered
-                      ? "rgba(0, 255, 136, 0.12)"
-                      : "rgba(0, 255, 136, 0.02)"
+                      ? "rgba(0, 255, 136, 0.18)"
+                      : "rgba(0, 255, 136, 0.06)" // increased default fill for better surface presence
                   }
                   stroke={
                     region.isWater
                       ? isHovered
                         ? "#60a5fa"
-                        : "rgba(59, 130, 246, 0.4)"
+                        : "rgba(59, 130, 246, 0.65)"
                       : isHovered
                       ? "#00ff88"
-                      : "rgba(0, 255, 136, 0.35)"
+                      : "rgba(0, 255, 136, 0.85)" // increased default line opacity from 0.35
                   }
-                  strokeWidth={isHovered ? 2 : 1.2}
+                  strokeWidth={isHovered ? 2 : 1.5} // slightly thicker default stroke
                   strokeDasharray={region.isWater ? "4 4" : undefined}
                   className="transition-all duration-300 ease-out cursor-pointer"
                   onMouseEnter={() => setHoveredRegion(region)}
@@ -92,7 +92,7 @@ export default function HologramMap() {
                 animate={{ opacity: 1, y: 0 }}
                 className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-black/80 border border-[var(--color-primary)]/30 backdrop-blur-sm"
               >
-                <span className="w-1 h-1 rounded-full bg-[var(--color-primary)] animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] animate-pulse" />
                 {hoveredRegion.name[locale as "uz" | "ru" | "en"] || hoveredRegion.name.en}
               </motion.span>
             ) : (
@@ -109,4 +109,5 @@ export default function HologramMap() {
     </div>
   );
 }
+
 
