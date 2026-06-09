@@ -49,7 +49,7 @@ export default function LandingPage() {
       </div>
 
       {/* HERO */}
-      <section className="relative min-h-[95vh] lg:min-h-screen flex items-center justify-center px-4 overflow-hidden pt-16 lg:pt-0">
+      <section className="relative min-h-[80vh] lg:min-h-[85vh] flex items-center justify-center px-4 overflow-hidden pt-12 lg:pt-0">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center justify-center py-0">
             {/* Left Hologram Map (Visible on lg+) */}
@@ -66,7 +66,7 @@ export default function LandingPage() {
                   <span className="text-[var(--color-primary)] font-semibold">{t("badgeModel")}</span>
                 </motion.div>
 
-                <motion.h1 {...fadeUp} transition={{ delay: 0.1, duration: 0.8 }} className="text-5xl sm:text-6xl lg:text-6xl xl:text-7xl font-bold font-[family-name:var(--font-display)] leading-[1.05] tracking-tight">
+                <motion.h1 {...fadeUp} transition={{ delay: 0.1, duration: 0.8 }} className="text-6xl sm:text-7xl lg:text-7xl xl:text-8xl font-bold font-[family-name:var(--font-display)] leading-[1.05] tracking-tight">
                   <span className="text-[var(--color-text-primary)]">{t("headline1")}</span>
                   <br />
                   <span className="gradient-text">{t("headline2")}</span>
