@@ -51,7 +51,7 @@ export default function LandingPage() {
       {/* HERO */}
       <section className="relative min-h-[95vh] lg:min-h-screen flex items-center justify-center px-4 overflow-hidden pt-16 lg:pt-0">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center justify-center py-12 lg:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center justify-center py-0">
             {/* Left Hologram Map (Visible on lg+) */}
             <div className="hidden lg:block lg:col-span-3">
               <HologramMap />
