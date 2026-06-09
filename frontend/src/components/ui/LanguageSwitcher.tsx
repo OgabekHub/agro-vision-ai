@@ -2,7 +2,7 @@
 
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/routing";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Globe, Check, ChevronDown } from "lucide-react";
 
@@ -19,6 +19,7 @@ export default function LanguageSwitcher() {
   const pathname = usePathname();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const ref = useRef<HTMLDivElement>(null);
 
   const current = locales.find((l) => l.code === locale) ?? locales[0];
@@ -35,8 +36,10 @@ export default function LanguageSwitcher() {
   }, []);
 
   const switchLocale = (newLocale: LocaleCode) => {
-    router.replace(pathname, { locale: newLocale });
     setIsOpen(false);
+    startTransition(() => {
+      router.replace(pathname, { locale: newLocale });
+    });
   };
 
   return (
@@ -44,11 +47,18 @@ export default function LanguageSwitcher() {
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all border border-white/5 hover:border-[var(--color-border-glow)] hover:bg-[var(--color-primary-subtle)] text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]"
+        disabled={isPending}
+        className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all border border-white/5 hover:border-[var(--color-border-glow)] hover:bg-[var(--color-primary-subtle)] text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] ${
+          isPending ? "opacity-75 cursor-not-allowed" : ""
+        }`}
         aria-label="Switch language"
         aria-expanded={isOpen}
       >
-        <Globe className="w-4 h-4" />
+        {isPending ? (
+          <div className="w-4 h-4 border-2 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin" />
+        ) : (
+          <Globe className="w-4 h-4" />
+        )}
         <span className="hidden sm:inline">{current.flag}</span>
         <span className="font-semibold">{current.shortLabel}</span>
         <motion.div
